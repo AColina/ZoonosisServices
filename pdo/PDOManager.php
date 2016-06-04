@@ -104,6 +104,8 @@ require_once '/../Doctrine/DBAL/LockMode.php';
 require_once '/../Doctrine/DBAL/Events.php';
 require_once '/../Doctrine/DBAL/Types/Type.php';
 require_once '/../Doctrine/DBAL/Types/StringType.php';
+require_once '/../Doctrine/DBAL/Types/TextType.php';
+require_once '/../Doctrine/DBAL/Types/DateType.php';
 require_once '/../Doctrine/DBAL/Types/IntegerType.php';
 require_once '/../Doctrine/DBAL/Exception/DriverException.php';
 require_once '/../Doctrine/DBAL/Driver/DriverException.php';
@@ -132,7 +134,7 @@ require_once '/Serializor.php';
 /**
  * Description of PDOManager
  *
- * @author clases
+ * @author Angel Colina
  */
 class PDOManager {
 
