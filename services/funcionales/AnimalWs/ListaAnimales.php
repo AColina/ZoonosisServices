@@ -15,16 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include("../../../conexion/conect.php");
-include ("../../../funciones/funcion.php");
-include("../../../funciones/AnnotationManager.php");
-include ('../../../funciones/QueryBuilder.php');
-include ('../../../entidades/Funcionales/Animal.php');
-include ('../../../entidades/Funcionales/Especie.php');
 
-$an = new AnnotationManager();
+require '../../../pdo/QueryBuilder.php';
 
-$qb = new QueryBuilder("SELECT a.* FROM Animal a ORDER BY a.nombre");
-$query = $qb->ejecutarQuery(-1);
-
-echo json_encode(($query));
+$qb = new QueryBuilder("SELECT a FROM Animal a ORDER BY a.nombre");
+$r = $qb->ejecutarQuery(-1);
+echo H57\Util\Serializor::json_encode($r);

@@ -25,12 +25,14 @@ class RegistroVacunacion_has_Animal {
     public $cantidad;
 
     /**
+     * @Id
      * @ManyToOne(targetEntity="RegistroVacunacion", inversedBy="registroVacunacion_has_Animal")
      * @JoinColumn(name="registroVacunacion_id", referencedColumnName="id")
      */
     public $registroVacunacion;
 
     /**
+     * @Id
      * @ManyToOne(targetEntity="Animal", inversedBy="vacunacion_has_Animal")
      * @JoinColumn(name="animal_id", referencedColumnName="id")
      */

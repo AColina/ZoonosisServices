@@ -28,12 +28,14 @@ class Animal_has_Caso {
     public $cantidadPositivos;
 
     /**
+     * @Id
      * @ManyToOne(targetEntity="Animal", inversedBy="animal_has_Caso")
      * @JoinColumn(name="animal_id", referencedColumnName="id")
      */
     public $animal;
 
     /**
+     * @Id
      * @ManyToOne(targetEntity="Caso", inversedBy="animal_has_Caso")
      * @JoinColumn(name="caso_id", referencedColumnName="id")
      */
