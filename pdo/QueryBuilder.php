@@ -38,12 +38,10 @@ class QueryBuilder {
         } else {
             $mandatory = $obligatorio ? " AND " : " OR ";
         }
-
-        $this->parametros = array_merge($this->parametros, array("p" . $c => $valor));
-
         if ($omitirNulo == true && $valor == null) {
             return $this;
         }
+        $this->parametros = array_merge($this->parametros, array("p" . $c => $valor));
 
         $this->query .= $isWhere . $mandatory . " $campo $condicion :p$c";
 
@@ -52,7 +50,11 @@ class QueryBuilder {
 
     public function ejecutarQuery($numeroResultados = 1, $posicionInicial = -1) {
         $pdo = new PDOManager();
-        return $pdo->ejecutarQuery($this->query, $this->parametros, $numeroResultados, $posicionInicial);
+        $valores = $pdo->ejecutarQuery($this->query, count($this->parametros) > 0 ? $this->parametros : null, $numeroResultados, $posicionInicial);
+        if ($numeroResultados == 1) {
+            return count($valores) > 0 ? $valores[1] : NULL;
+        }
+        return $valores;
     }
 
 }

@@ -16,14 +16,9 @@
  * limitations under the License.
  */
 
-include("../../../conexion/conect.php");
-include ("../../../funciones/funcion.php");
-include("../../../funciones/AnnotationManager.php");
-include ('../../../funciones/QueryBuilder.php');
-include ('../../../entidades/Administracion/Cliente.php');
-include ('../../../entidades/Proceso/Novedades.php');
+require '../../../pdo/QueryBuilder.php';
 
-$qb = new QueryBuilder("SELECT c.* FROM Cliente c INNER JOIN Persona p on c.Persona_id=p.id Order By p.nombre");
-$query = $qb->ejecutarQuery(-1);
+$qb = new QueryBuilder("SELECT c FROM Cliente c JOIN c.persona p Order By p.nombre");
+$r = $qb->ejecutarQuery(-1);
 
-echo json_encode(($query));
+echo H57\Util\Serializor::json_encode($r);

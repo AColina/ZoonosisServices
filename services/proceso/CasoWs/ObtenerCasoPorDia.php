@@ -17,7 +17,7 @@
  */
 
 $dia = isset($_GET['dia']) ? $_GET['dia'] : NULL;
-$parroquia = isset($_GET['parroquia']) ? $_GET['parroquia'] : NULL;
+$parroquia = isset($_GET['parroquia']) ? ceil($_GET['parroquia']) : NULL;
 
 if ($dia == NULL) {
     die('Es obligatorio seleccionar una fecha');
@@ -25,15 +25,10 @@ if ($dia == NULL) {
     die('Es obligatorio seleccionar una parroquia');
 }
 
-include("../../../conexion/conect.php");
-include ("../../../funciones/funcion.php");
-include("../../../funciones/AnnotationManager.php");
-include ('../../../funciones/QueryBuilder.php');
-include ("../../../entidades/Proceso/Caso.php");
-require ('../../../pojos/busquedaspojo.php');
+require '../../../pdo/QueryBuilder.php';
 
-$qb = new QueryBuilder("SELECT c.* FROM Caso c");
+$qb = new QueryBuilder("SELECT c FROM Caso c JOIN c.parroquia p");
 $resultado = $qb->agregarCondicion("c.fechaElaboracion", "=", $dia)->
-        agregarCondicion("c.Parroquia_id", "=", ceil($parroquia))->
+        agregarCondicion("p.id", "=", $parroquia)->
         ejecutarQuery();
 echo json_encode($resultado);

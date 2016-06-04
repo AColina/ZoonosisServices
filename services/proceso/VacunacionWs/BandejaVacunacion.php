@@ -17,12 +17,8 @@
  */
 
 
-include("../../../conexion/conect.php");
-include ("../../../funciones/funcion.php");
-include("../../../funciones/AnnotationManager.php");
-include ('../../../funciones/QueryBuilder.php');
-//include ("../../../entidades/Proceso");
-require ('../../../pojos/busquedaspojo.php');
+require '../../../pdo/QueryBuilder.php';
+require_once '../../../pojos/busquedaspojo.php';
 
 $semana = isset($_GET['idSemana']) ? $_GET['idSemana'] : NULL;
 $municipio = isset($_GET['idMunicipio']) ? $_GET['idMunicipio'] : NULL;
@@ -32,27 +28,23 @@ $hasta = isset($_GET['hasta']) ? $_GET['hasta'] : NULL;
 $inicio = isset($_GET['inicio']) ? $_GET['inicio'] : -1;
 $cantidad = isset($_GET['cantidad']) ? $_GET['cantidad'] : 10;
 
-$qb = new QueryBuilder("SELECT v.* FROM Vacunacion v "
-        . "INNER JOIN Parroquia p on v.Parroquia_id = p.id "
-        . "INNER JOIN Municipio m on p.Municipio_id = m.id "
-        . "INNER JOIN Semana s on v.Semana_id = s.id");
-$resultado=$qb->agregarCondicion("s.id", "=", $semana, true, true)->
+$qb = new QueryBuilder("SELECT v FROM Vacunacion v JOIN v.parroquia p "
+        . "JOIN p.municipio m JOIN v.semana s");
+$resultado = $qb->agregarCondicion("s.id", "=", $semana, true, true)->
         agregarCondicion("m.id", ">", $municipio, true, true)->
         agregarCondicion("p.id", ">", $parroquia, true, true)->
-        agregarCondicion("fechaElaboracion", ">", $desde, true, true)->
-        agregarCondicion("fechaElaboracion", "<", $hasta, true, true)->
+        agregarCondicion("v.fechaElaboracion", ">", $desde, true, true)->
+        agregarCondicion("v.fechaElaboracion", "<", $hasta, true, true)->
         ejecutarQuery($cantidad, $inicio);
 
-//$qb->agregarQuery("SELECT Count(v.id) FROM Vacunacion v "
-//        . "INNER JOIN Parroquia p on v.Parroquia_id = p.id "
-//        . "INNER JOIN Municipio m on p.Municipio_id = m.id "
-//        . "INNER JOIN Semana s on v.Semana_id = s.id");
-//$qb->agregarCondicion("s.id", "=", $semana, true, true)->
-//        agregarCondicion("m.id", ">", $municipio, true, true)->
-//        agregarCondicion("p.id", ">", $parroquia, true, true)->
-//        agregarCondicion("fechaElaboracion", ">", $desde, true, true)->
-//        agregarCondicion("fechaElaboracion", "<", $hasta, true, true)->
-//        ejecutarQuery();
+$qb->agregarQuery("SELECT count(v) FROM Vacunacion v JOIN v.parroquia p "
+        . "JOIN p.municipio m JOIN v.semana s");
+$cantidadResultados = $qb->agregarCondicion("s.id", "=", $semana, true, true)->
+        agregarCondicion("m.id", ">", $municipio, true, true)->
+        agregarCondicion("p.id", ">", $parroquia, true, true)->
+        agregarCondicion("v.fechaElaboracion", ">", $desde, true, true)->
+        agregarCondicion("v.fechaElaboracion", "<", $hasta, true, true)->
+        ejecutarQuery();
 
-$pojo= new BusquedasPojo(count($resultado), $resultado);
+$pojo = new BusquedasPojo($cantidadResultados, $resultado);
 echo json_encode($pojo);

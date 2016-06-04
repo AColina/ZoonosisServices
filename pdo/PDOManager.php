@@ -34,6 +34,9 @@ require_once '/../Doctrine/ORM/Query/QueryException.php';
 require_once '/../Doctrine/DBAL/SQLParserUtils.php';
 require_once '/../Doctrine/DBAL/Connection.php';
 require_once '/../Doctrine/DBAL/Driver.php';
+require_once '/../Doctrine/DBAL/Exception/DriverException.php';
+require_once '/../Doctrine/DBAL/Exception/ServerException.php';
+require_once '/../Doctrine/DBAL/Exception/InvalidFieldNameException.php';
 require_once '/../Doctrine/DBAL/VersionAwarePlatformDriver.php';
 require_once '/../Doctrine/DBAL/Driver/ExceptionConverterDriver.php';
 require_once '/../Doctrine/DBAL/Driver/AbstractMySQLDriver.php';
@@ -158,7 +161,7 @@ class PDOManager {
 
             $connectionOptions = array(
                 'driver' => PDOManager::driver,
-                'host' => PDOManager::host,
+                'hostname' => PDOManager::host,
                 'dbname' => PDOManager::db,
                 'user' => PDOManager::user,
                 'charset' => 'UTF8',
@@ -206,6 +209,8 @@ class PDOManager {
         if ($numeroResultados > 1 || $numeroResultados <= 0) {
             return $query->getResult();
         } else {
+            require_once '/../Doctrine/ORM/UnexpectedResultException.php';
+            require_once '/../Doctrine/ORM/NoResultException.php';
             try {
                 return $query->getSingleResult();
             } catch (Doctrine\ORM\NoResultException $ex) {

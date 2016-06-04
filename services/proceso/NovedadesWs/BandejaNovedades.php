@@ -17,12 +17,8 @@
  */
 
 
-include("../../../conexion/conect.php");
-include ("../../../funciones/funcion.php");
-include("../../../funciones/AnnotationManager.php");
-include ('../../../funciones/QueryBuilder.php');
-include ("../../../entidades/Proceso/Novedades.php");
-require ('../../../pojos/busquedaspojo.php');
+require '../../../pdo/QueryBuilder.php';
+require_once '../../../pojos/busquedaspojo.php';
 
 $nombre = isset($_GET['nombre']) ? "LOWER('%" . $_GET['nombre'] . "%')" : NULL;
 $desde = isset($_GET['desde']) ? $_GET['desde'] : NULL;
@@ -30,16 +26,16 @@ $hasta = isset($_GET['hasta']) ? $_GET['hasta'] : NULL;
 $inicio = isset($_GET['inicio']) ? $_GET['inicio'] : -1;
 $cantidad = isset($_GET['cantidad']) ? $_GET['cantidad'] : 10;
 
-$qb = new QueryBuilder("SELECT * FROM Novedades");
-$resultado=$qb->agregarCondicion("LOWER(nombre)", "LIKE", $nombre, true, true)->
-        agregarCondicion("fechaElaboracion", ">", $desde, true, true)->
-        agregarCondicion("fechaElaboracion", "<", $hasta, true, true)->
+$qb = new QueryBuilder("SELECT n FROM Novedades n");
+$resultado = $qb->agregarCondicion("LOWER(n.nombre)", "LIKE", $nombre, true, true)->
+        agregarCondicion("n.fechaElaboracion", ">", $desde, true, true)->
+        agregarCondicion("n.fechaElaboracion", "<", $hasta, true, true)->
         ejecutarQuery($cantidad, $inicio);
 
-//$qb->agregarQuery("SELECT count(*) FROM Novedades");
-//$qb->agregarCondicion("LOWER(nombre)", "LIKE", $nombre, true, true)->
-//        agregarCondicion("fechaElaboracion", ">", $desde, true, true)->
-//        agregarCondicion("fechaElaboracion", "<", $hasta, true, true)->
-//        ejecutarQuery();
-$pojo= new BusquedasPojo(count($resultado), $resultado);
+$qb->agregarQuery("SELECT count(n) FROM Novedades n");
+$cantidadResultados = $qb->agregarCondicion("LOWER(n.nombre)", "LIKE", $nombre, true, true)->
+        agregarCondicion("n.fechaElaboracion", ">", $desde, true, true)->
+        agregarCondicion("n.fechaElaboracion", "<", $hasta, true, true)->
+        ejecutarQuery();
+$pojo = new BusquedasPojo($cantidadResultados, $resultado);
 echo json_encode($pojo);

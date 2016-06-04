@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include_once ('/../Entidad.php');
+include_once ('/../EntidadAdministrativa.php');
 
 /**
  * @Entity 
  */
-class Persona extends Entidad {
+class Persona extends EntidadAdministrativa {
 
     /** @Column(type="string") */
     public $apellido;
