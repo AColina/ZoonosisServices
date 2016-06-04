@@ -1,37 +1,44 @@
 <?php
 
-include_once ('/../Entidad.php');
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2016 angel.colina.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+include_once ('/../Entidad.php');
 
 /**
- * Description of Persona
- *
- * @author GustavoG
+ * @Entity 
  */
 class Persona extends Entidad {
 
-    public $nombre;
+    /** @Column(type="string") */
     public $apellido;
+
+    /** @Column(type="string") */
     public $cedula;
 
-    /**
-     * @OneToOne(entity=Cliente,mappedBy=persona_id)
-     */
+    /** @OneToOne(targetEntity="Cliente", mappedBy="persona") */
     public $cliente;
 
-    /**
-     * @OneToOne(entity=Usuario,mappedBy=persona_id)
-     */
+    /** @OneToOne(targetEntity="Usuario", mappedBy="persona") */
     public $usuario;
 
-    public function getNombre() {
-        return $this->nombre;
+    public function __construct() {
+        
     }
 
+    //GETTER AND SETTER
     public function getApellido() {
         return $this->apellido;
     }
@@ -46,10 +53,6 @@ class Persona extends Entidad {
 
     public function getUsuario() {
         return $this->usuario;
-    }
-
-    public function setNombre($nombre) {
-        $this->nombre = $nombre;
     }
 
     public function setApellido($apellido) {

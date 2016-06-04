@@ -18,49 +18,53 @@
 include_once ('/../Entidad.php');
 
 /**
- * Description of RegistroVacunacion
- *
- * @author angel.colina
+ * @Entity
  */
 class RegistroVacunacion extends Entidad {
 
     /**
-     * @ManyToOne(entity=Vacunacion)
+     * @ManyToOne(targetEntity="Vacunacion", inversedBy="registroVacunacion")
+     * @JoinColumn(name="vacunacion_id", referencedColumnName="id")
      */
-    public $vacunacion_id;
+    public $vacunacion;
 
     /**
-     * @ManyToOne(entity=Usuario)
+     * @ManyToOne(targetEntity="Usuario", inversedBy="$registroVacunacion")
+     * @JoinColumn(name="usuario_id", referencedColumnName="id")
      */
-    public $usuario_id;
+    public $usuario;
 
-    /**
-     * @OneToMany(entity=RegistroVacunacion_has_Animal,mappedBy=registroVacunacion_id)
-     */
+    /** @OneToMany(targetEntity="RegistroVacunacion_has_Animal", mappedBy="$registroVacunacion") */
     public $registroVacunacion_has_Animal;
 
-    public function getVacunacion_id() {
-        return $this->vacunacion_id;
+    public function __construct() {
+        
     }
 
-    public function getUsuario_id() {
-        return $this->usuario_id;
+    //GETTER AND SETTER
+
+    public function getVacunacion() {
+        return $this->vacunacion;
     }
 
-    public function getVacunacion_has_Animal() {
-        return $this->vacunacion_has_Animal;
+    public function getUsuario() {
+        return $this->usuario;
     }
 
-    public function setVacunacion_id($vacunacion_id) {
-        $this->vacunacion_id = $vacunacion_id;
+    public function getRegistroVacunacion_has_Animal() {
+        return $this->registroVacunacion_has_Animal;
     }
 
-    public function setUsuario_id($usuario_id) {
-        $this->usuario_id = $usuario_id;
+    public function setVacunacion($vacunacion) {
+        $this->vacunacion = $vacunacion;
     }
 
-    public function setVacunacion_has_Animal($vacunacion_has_Animal) {
-        $this->vacunacion_has_Animal = $vacunacion_has_Animal;
+    public function setUsuario($usuario) {
+        $this->usuario = $usuario;
+    }
+
+    public function setRegistroVacunacion_has_Animal($registroVacunacion_has_Animal) {
+        $this->registroVacunacion_has_Animal = $registroVacunacion_has_Animal;
     }
 
 }

@@ -17,43 +17,48 @@
  */
 
 /**
- * Description of RegistroVacunacion_has_Animal
- *
- * @author angel.colina
+ * @Entity
  */
 class RegistroVacunacion_has_Animal {
 
-    /**
-     * @id
-     * @ManyToOne(entity=RegistroVacunacion)
-     */
-    public $registroVacunacion_id;
-
-    /**
-     * @id
-     * @ManyToOne(entity=Animal)
-     */
-    public $animal_id;
+    /** @Column(type="integer") */
     public $cantidad;
 
-    public function getRegistroVacunacion_id() {
-        return $this->registroVacunacion_id;
+    /**
+     * @ManyToOne(targetEntity="RegistroVacunacion", inversedBy="registroVacunacion_has_Animal")
+     * @JoinColumn(name="registroVacunacion_id", referencedColumnName="id")
+     */
+    public $registroVacunacion;
+
+    /**
+     * @ManyToOne(targetEntity="Animal", inversedBy="vacunacion_has_Animal")
+     * @JoinColumn(name="animal_id", referencedColumnName="id")
+     */
+    public $animal;
+
+    public function __construct() {
+        
     }
 
-    public function getAnimal_id() {
-        return $this->animal_id;
+    //GETTER AND SETTER
+    public function getRegistroVacunacion() {
+        return $this->registroVacunacion;
+    }
+
+    public function getAnimal() {
+        return $this->animal;
     }
 
     public function getCantidad() {
         return $this->cantidad;
     }
 
-    public function setRegistroVacunacion_id($registroVacunacion_id) {
-        $this->registroVacunacion_id = $registroVacunacion_id;
+    public function setRegistroVacunacion($registroVacunacion) {
+        $this->registroVacunacion = $registroVacunacion;
     }
 
-    public function setAnimal_id($animal_id) {
-        $this->animal_id = $animal_id;
+    public function setAnimal($animal) {
+        $this->animal = $animal;
     }
 
     public function setCantidad($cantidad) {

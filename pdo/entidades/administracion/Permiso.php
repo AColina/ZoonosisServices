@@ -21,5 +21,21 @@ require_once ('/../EntidadAdministrativa.php');
  * @Entity 
  */
 class Permiso extends EntidadAdministrativa {
-    
+
+    /** @OneToMany(targetEntity="Usuario", mappedBy="permiso") */
+    public $usuarios;
+
+    public function __construct() {
+        
+    }
+
+    //GETTER AND SETTER
+    public function getUsuarios() {
+        return $this->usuarios;
+    }
+
+    public function setUsuarios($usuarios) {
+        $this->usuarios = $usuarios;
+    }
+
 }

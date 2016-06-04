@@ -28,12 +28,50 @@ class Parroquia extends EntidadAdministrativa {
      */
     public $municipio;
 
+    /** @OneToMany(targetEntity="Cliente", mappedBy="parroquia") */
+    public $clientes;
+
+    /** @OneToMany(targetEntity="Vacunacion", mappedBy="parroquia") */
+    public $vacunaciones;
+
+    /** @OneToMany(targetEntity="Caso", mappedBy="parroquia") */
+    public $casos;
+
+    public function __construct() {
+        
+    }
+
+    //GETTER AND SETTER
     public function getMunicipio() {
         return $this->municipio;
     }
 
+    public function getClientes() {
+        return $this->clientes;
+    }
+
+    public function getVacunaciones() {
+        return $this->vacunaciones;
+    }
+
+    public function getCasos() {
+        return $this->casos;
+    }
+
     public function setMunicipio($municipio) {
         $this->municipio = $municipio;
+    }
+
+    public function setClientes($clientes) {
+        $this->clientes = $clientes;
+    }
+
+    public function setVacunaciones($vacunaciones) {
+        $this->vacunaciones = $vacunaciones;
+    }
+
+    public function setCasos($casos) {
+        $this->casos = $casos;
     }
 
 }

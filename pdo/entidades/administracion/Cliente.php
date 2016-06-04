@@ -18,32 +18,41 @@
 include_once ('/../Entidad.php');
 
 /**
- * Description of Cliente
- *
- * @author GustavoG
- * @author Angel Colina
+ * @Entity 
  */
 class Cliente extends Entidad {
 
+    /** @Column(type="string") */
     public $telefono;
+
+    /** @Column(type="string") */
     public $correo;
+
+    /** @Column(type="text") */
     public $direccion;
 
-    /**
-     * @ManyToOne(entity=Parroquia)
-     */
-    public $parroquia_id;
+    //relaciones
 
     /**
-     * @OneToOne(entity=Persona)
+     * @ManyToOne(targetEntity="Parroquia", inversedBy="clientes")
+     * @JoinColumn(name="parroquia_id", referencedColumnName="id")
      */
-    public $persona_id;
+    public $parroquia;
 
     /**
-     * @OneToMany(entity=Novedades,mappedBy=cliente_id)
+     * @OneToOne(targetEntity="Persona", inversedBy="cliente")
+     * @JoinColumn(name="persona_id", referencedColumnName="id")
      */
+    public $persona;
+
+    /** @OneToMany(targetEntity="Novedades", mappedBy="cliente") */
     public $novedades;
 
+    public function __construct() {
+        
+    }
+
+    //GETTER AND SETTER
     public function getTelefono() {
         return $this->telefono;
     }
@@ -56,12 +65,12 @@ class Cliente extends Entidad {
         return $this->direccion;
     }
 
-    public function getParroquia_id() {
-        return $this->parroquia_id;
+    public function getParroquia() {
+        return $this->parroquia;
     }
 
-    public function getPersona_id() {
-        return $this->persona_id;
+    public function getPersona() {
+        return $this->persona;
     }
 
     public function getNovedades() {
@@ -80,12 +89,12 @@ class Cliente extends Entidad {
         $this->direccion = $direccion;
     }
 
-    public function setParroquia_id($parroquia_id) {
-        $this->parroquia_id = $parroquia_id;
+    public function setParroquia($parroquia) {
+        $this->parroquia = $parroquia;
     }
 
-    public function setPersona_id($persona_id) {
-        $this->persona_id = $persona_id;
+    public function setPersona($persona) {
+        $this->persona = $persona;
     }
 
     public function setNovedades($novedades) {

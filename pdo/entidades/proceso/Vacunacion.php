@@ -18,40 +18,43 @@
 include_once ('/../Entidad.php');
 
 /**
- * Description of Vacunacion
- *
- * @author GustavoG
- * @author Angel Colina
+ * @Entity
  */
 class Vacunacion extends Entidad {
 
+    /** @Column(type="date") */
     public $fechaElaboracion;
 
     /**
-     * @ManyToOne(entity=Semana)
+     * @ManyToOne(targetEntity="Semana", inversedBy="vacunaciones")
+     * @JoinColumn(name="semana_id", referencedColumnName="id")
      */
-    public $semana_id;
+    public $semana;
 
     /**
-     * @ManyToOne(entity=Parroquia)
+     * @ManyToOne(targetEntity="Parroquia", inversedBy="vacunaciones")
+     * @JoinColumn(name="parroquia_id", referencedColumnName="id")
      */
-    public $parroquia_id;
+    public $parroquia;
 
-    /**
-     * @OneToMany(entity=RegistroVacunacion,mappedBy=vacunacion_id)
-     */
+    /** @OneToMany(targetEntity="RegistroVacunacion", mappedBy="$vacunacion") */
     public $registroVacunacion;
 
+    public function __construct() {
+        
+    }
+
+    //GETTER AND SETTER
     public function getFechaElaboracion() {
         return $this->fechaElaboracion;
     }
 
-    public function getSemana_id() {
-        return $this->semana_id;
+    public function getSemana() {
+        return $this->semana;
     }
 
-    public function getParroquia_id() {
-        return $this->parroquia_id;
+    public function getParroquia() {
+        return $this->parroquia;
     }
 
     public function getRegistroVacunacion() {
@@ -62,12 +65,12 @@ class Vacunacion extends Entidad {
         $this->fechaElaboracion = $fechaElaboracion;
     }
 
-    public function setSemana_id($semana_id) {
-        $this->semana_id = $semana_id;
+    public function setSemana($semana) {
+        $this->semana = $semana;
     }
 
-    public function setParroquia_id($parroquia_id) {
-        $this->parroquia_id = $parroquia_id;
+    public function setParroquia($parroquia) {
+        $this->parroquia = $parroquia;
     }
 
     public function setRegistroVacunacion($registroVacunacion) {

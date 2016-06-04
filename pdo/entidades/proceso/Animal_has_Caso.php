@@ -1,38 +1,55 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2016 angel.colina.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 /**
- * Description of Animal_has_Caso
- *
- * @author GustavoG
+ * @Entity
  */
 class Animal_has_Caso {
 
-    /**
-     * @Id
-     * @ManyToOne(entity=Animal)
-     */
-    public $animal_id;
-
-    /**
-     * @Id
-     * @ManyToOne(entity=Caso)
-     */
-    public $caso_id;
+    /** @Column(type="integer") */
     public $cantidadIngresado;
+
+    /** @Column(type="integer") */
     public $cantidadPositivos;
 
-    public function getAnimal_id() {
-        return $this->animal_id;
+    /**
+     * @ManyToOne(targetEntity="Animal", inversedBy="animal_has_Caso")
+     * @JoinColumn(name="animal_id", referencedColumnName="id")
+     */
+    public $animal;
+
+    /**
+     * @ManyToOne(targetEntity="Caso", inversedBy="animal_has_Caso")
+     * @JoinColumn(name="caso_id", referencedColumnName="id")
+     */
+    public $caso;
+
+    public function __construct() {
+        
     }
 
-    public function getCaso_id() {
-        return $this->caso_id;
+    //GETTER AND SETTER
+    public function getAnimal() {
+        return $this->animal;
+    }
+
+    public function getCaso() {
+        return $this->caso;
     }
 
     public function getCantidadIngresado() {
@@ -43,12 +60,12 @@ class Animal_has_Caso {
         return $this->cantidadPositivos;
     }
 
-    public function setAnimal_id($animal_id) {
-        $this->animal_id = $animal_id;
+    public function setAnimal($animal) {
+        $this->animal = $animal;
     }
 
-    public function setCaso_id($caso_id) {
-        $this->caso_id = $caso_id;
+    public function setCaso($caso) {
+        $this->caso = $caso;
     }
 
     public function setCantidadIngresado($cantidadIngresado) {

@@ -18,39 +18,43 @@
 include_once ('/../Entidad.php');
 
 /**
- * Description of Caso
- *
- * @author GustavoG
+ * @Entity
  */
 class Caso extends Entidad {
 
+    /** @Column(type="date") */
     public $fechaElaboracion;
 
     /**
-     * @ManyToOne(entity=Parroquia)
+     * @ManyToOne(targetEntity="Parroquia", inversedBy="casos")
+     * @JoinColumn(name="parroquia_id", referencedColumnName="id")
      */
-    public $parroquia_id;
+    public $parroquia;
 
     /**
-     * @ManyToOne(entity=Semana)
+     * @ManyToOne(targetEntity="Semana", inversedBy="casos")
+     * @JoinColumn(name="semana_id", referencedColumnName="id")
      */
-    public $semana_id;
+    public $semana;
 
-    /**
-     * @OneToMany(entity=Animal_has_Caso,mappedBy=caso_id)
-     */
+    /** @OneToMany(targetEntity="Animal_has_Caso", mappedBy="caso") */
     public $animal_has_Caso;
 
+    public function __construct() {
+        
+    }
+
+    //GETTER AND SETTER
     public function getFechaElaboracion() {
         return $this->fechaElaboracion;
     }
 
-    public function getParroquia_id() {
-        return $this->parroquia_id;
+    public function getParroquia() {
+        return $this->parroquia;
     }
 
-    public function getSemana_id() {
-        return $this->semana_id;
+    public function getSemana() {
+        return $this->semana;
     }
 
     public function getAnimal_has_Caso() {
@@ -61,12 +65,12 @@ class Caso extends Entidad {
         $this->fechaElaboracion = $fechaElaboracion;
     }
 
-    public function setParroquia_id($parroquia_id) {
-        $this->parroquia_id = $parroquia_id;
+    public function setParroquia($parroquia) {
+        $this->parroquia = $parroquia;
     }
 
-    public function setSemana_id($semana_id) {
-        $this->semana_id = $semana_id;
+    public function setSemana($semana) {
+        $this->semana = $semana;
     }
 
     public function setAnimal_has_Caso($animal_has_Caso) {

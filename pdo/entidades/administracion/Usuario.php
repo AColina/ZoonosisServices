@@ -1,39 +1,59 @@
 <?php
 
+/*
+ * Copyright 2016 angel.colina.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 include_once ('/../Entidad.php');
 
 /**
- * Created by PhpStorm.
- * User: GustavoG
- * Date: 21/04/2016
- * Time: 06:58 PM
+ * @Entity 
  */
 class Usuario extends Entidad {
 
+    /** @Column(type="string") */
     public $usuario;
+
+    /** @Column(type="string") */
     public $contrasena;
+
+    /** @Column(type="date") */
     public $fechaNacimiento;
 
     /**
-     * @OneToOne(entity=Persona)
+     * @OneToOne(targetEntity="Persona", inversedBy="usuario")
+     * @JoinColumn(name="persona_id", referencedColumnName="id")
      */
-    public $persona_id;
+    public $persona;
 
-    /**
-     * @OneToMany(entity=Novedades,mappedBy=usuario_id)
-     */
+    /** @OneToMany(targetEntity="Novedades", mappedBy="usuario") */
     public $novedades;
 
     /**
-     * @ManyToOne(entity=Permiso)
+     * @ManyToOne(targetEntity="Permiso", inversedBy="usuarios")
+     * @JoinColumn(name="permiso_id", referencedColumnName="id")
      */
-    public $permiso_id;
+    public $permiso;
 
-    /**
-     * @OneToMany(entity=RegistroVacunacion,mappedBy=usuario_id)
-     */
+    /** @OneToMany(targetEntity="RegistroVacunacion", mappedBy="usuario") */
     public $registroVacunacion;
 
+    public function __construct() {
+        
+    }
+
+    //GETTER AND SETTER
     public function getUsuario() {
         return $this->usuario;
     }
@@ -46,16 +66,16 @@ class Usuario extends Entidad {
         return $this->fechaNacimiento;
     }
 
-    public function getPersona_id() {
-        return $this->persona_id;
+    public function getPersona() {
+        return $this->persona;
     }
 
     public function getNovedades() {
         return $this->novedades;
     }
 
-    public function getPermiso_id() {
-        return $this->permiso_id;
+    public function getPermiso() {
+        return $this->permiso;
     }
 
     public function getRegistroVacunacion() {
@@ -74,16 +94,16 @@ class Usuario extends Entidad {
         $this->fechaNacimiento = $fechaNacimiento;
     }
 
-    public function setPersona_id($persona_id) {
-        $this->persona_id = $persona_id;
+    public function setPersona($persona) {
+        $this->persona = $persona;
     }
 
     public function setNovedades($novedades) {
         $this->novedades = $novedades;
     }
 
-    public function setPermiso_id($permiso_id) {
-        $this->permiso_id = $permiso_id;
+    public function setPermiso($permiso) {
+        $this->permiso = $permiso;
     }
 
     public function setRegistroVacunacion($registroVacunacion) {

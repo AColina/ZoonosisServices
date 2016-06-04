@@ -1,71 +1,80 @@
 <?php
 
-include_once ('/../Entidad.php');
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2016 angel.colina.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+include_once ('/../EntidadAdministrativa.php');
 
 /**
- * Description of Novedades
- *
- * @author GustavoG
+ * @Entity 
  */
-class Novedades extends Entidad {
+class Novedades extends EntidadAdministrativa {
 
+    /** @Column(type="date") */
     public $fechaElaboracion;
-    public $nombre;
+
+    /** @Column(type="text") */
     public $descripcion;
 
     /**
-     * @ManyToOne(entity=Cliente)
+     * @ManyToOne(targetEntity="Cliente", inversedBy="novedades")
+     * @JoinColumn(name="cliente_id", referencedColumnName="id")
      */
-    public $cliente_id;
+    public $cliente;
 
     /**
-     * @ManyToOne(entity=Usuario)
+     * @ManyToOne(targetEntity="Usuario", inversedBy="novedades")
+     * @JoinColumn(name="usuario_id", referencedColumnName="id")
      */
-    public $usuario_id;
+    public $usuario;
 
-    public function getFechaElaboracion() {
-        return $this->fechaElaboracion;
+    public function __construct() {
+        
     }
 
-    public function getNombre() {
-        return $this->nombre;
+    //GETTER AND SETTER
+    public function getFechaElaboracion() {
+        return $this->fechaElaboracion;
     }
 
     public function getDescripcion() {
         return $this->descripcion;
     }
 
-    public function getCliente_id() {
-        return $this->cliente_id;
+    public function getCliente() {
+        return $this->cliente;
     }
 
-    public function getUsuario_id() {
-        return $this->usuario_id;
+    public function getUsuario() {
+        return $this->usuario;
     }
 
     public function setFechaElaboracion($fechaElaboracion) {
         $this->fechaElaboracion = $fechaElaboracion;
     }
 
-    public function setNombre($nombre) {
-        $this->nombre = $nombre;
-    }
-
     public function setDescripcion($descripcion) {
         $this->descripcion = $descripcion;
     }
 
-    public function setCliente_id($cliente_id) {
-        $this->cliente_id = $cliente_id;
+    public function setCliente($cliente) {
+        $this->cliente = $cliente;
     }
 
-    public function setUsuario_id($usuario_id) {
-        $this->usuario_id = $usuario_id;
+    public function setUsuario($usuario) {
+        $this->usuario = $usuario;
     }
 
 }
