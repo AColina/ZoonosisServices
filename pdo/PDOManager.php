@@ -45,6 +45,7 @@ require_once '/../Doctrine/Common/Persistence/Mapping/Driver/AnnotationDriver.ph
 require_once '/../Doctrine/ORM/Mapping/Driver/AnnotationDriver.php';
 require_once '/../Doctrine/ORM/Mapping/QuoteStrategy.php';
 require_once '/../Doctrine/ORM/Mapping/DefaultQuoteStrategy.php';
+require_once '/../Doctrine/ORM/Mapping/Annotation.php';
 require_once '/../Doctrine/ORM/Query/FilterCollection.php';
 require_once '/../Doctrine/ORM/Query/ResultSetMapping.php';
 require_once '/../Doctrine/ORM/Query/Parser.php';
@@ -85,6 +86,8 @@ require_once '/../Doctrine/Common/Annotations/DocLexer.php';
 require_once '/../Doctrine/Common/Annotations/DocParser.php';
 require_once '/../Doctrine/Common/Annotations/SimpleAnnotationReader.php';
 require_once '/../Doctrine/Common/Annotations/AnnotationRegistry.php';
+require_once '/../Doctrine/Common/Annotations/TokenParser.php';
+require_once '/../Doctrine/Common/Annotations/AnnotationException.php';
 require_once '/../Doctrine/Common/Cache/Cache.php';
 require_once '/../Doctrine/Common/Cache/CacheProvider.php';
 require_once '/../Doctrine/Common/Cache/ArrayCache.php';
@@ -132,6 +135,16 @@ require_once '/../Doctrine/ORM/Query/ParameterTypeInferer.php';
 require_once '/../Doctrine/ORM/PersistentCollection.php';
 require_once '/../Doctrine/Common/Persistence/Mapping/ReflectionService.php';
 require_once '/../Doctrine/Common/Persistence/Mapping/RuntimeReflectionService.php';
+require_once '/../Doctrine/Instantiator/InstantiatorInterface.php';
+require_once '/../Doctrine/Instantiator/Instantiator.php';
+require_once '/../Doctrine/ORM/Mapping/MappedSuperclass.php';
+require_once '/../Doctrine/ORM/Mapping/Id.php';
+require_once '/../Doctrine/ORM/Mapping/Column.php';
+require_once '/../Doctrine/ORM/Mapping/GeneratedValue.php';
+require_once '/../Doctrine/ORM/Mapping/Entity.php';
+require_once '/../Doctrine/ORM/Mapping/ManyToOne.php';
+require_once '/../Doctrine/ORM/Mapping/JoinColumn.php';
+require_once '/../Doctrine/ORM/Mapping/OneToMany.php';
 require_once '/Serializor.php';
 
 /**

@@ -17,24 +17,40 @@
  */
 require_once ('/../EntidadAdministrativa.php');
 
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\OneToMany;
+use JMS\Serializer\Annotation\Type;
+
 /**
  * @Entity
  */
 class Parroquia extends EntidadAdministrativa {
 
     /**
+     * @Type("Municipio")
      * @ManyToOne(targetEntity="Municipio", inversedBy="parroquias")
      * @JoinColumn(name="municipio_id", referencedColumnName="id")
      */
     public $municipio;
 
-    /** @OneToMany(targetEntity="Cliente", mappedBy="parroquia") */
+    /**
+     * @Type("array<Cliente>")
+     * @OneToMany(targetEntity="Cliente", mappedBy="parroquia") 
+     */
     public $clientes;
 
-    /** @OneToMany(targetEntity="Vacunacion", mappedBy="parroquia") */
+    /**
+     * @Type("array<Vacunacion>")
+     * @OneToMany(targetEntity="Vacunacion", mappedBy="parroquia")
+     *  */
     public $vacunaciones;
 
-    /** @OneToMany(targetEntity="Caso", mappedBy="parroquia") */
+    /**
+     * @Type("array<Caso>")
+     * @OneToMany(targetEntity="Caso", mappedBy="parroquia") 
+     */
     public $casos;
 
     public function __construct() {

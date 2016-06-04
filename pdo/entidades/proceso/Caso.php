@@ -15,29 +15,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include_once ('/../Entidad.php');
+require_once ('/../Entidad.php');
+
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\OneToMany;
+use JMS\Serializer\Annotation\Type;
 
 /**
  * @Entity
  */
 class Caso extends Entidad {
 
-    /** @Column(type="date") */
+    /**
+     * @Type("DateTime")
+     * @Column(type="date") 
+     */
     public $fechaElaboracion;
 
     /**
+     * @Type("Parroquia")
      * @ManyToOne(targetEntity="Parroquia", inversedBy="casos")
      * @JoinColumn(name="parroquia_id", referencedColumnName="id")
      */
     public $parroquia;
 
     /**
+     * @Type("Semana")
      * @ManyToOne(targetEntity="Semana", inversedBy="casos")
      * @JoinColumn(name="semana_id", referencedColumnName="id")
      */
     public $semana;
 
-    /** @OneToMany(targetEntity="Animal_has_Caso", mappedBy="caso") */
+    /**
+     * @Type("array<Animal_has_Caso>")
+     * @OneToMany(targetEntity="Animal_has_Caso", mappedBy="caso") 
+     */
     public $animal_has_Caso;
 
     public function __construct() {

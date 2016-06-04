@@ -15,8 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-require_once '/entidades/Entidad.php';
-require_once '/entidades/EntidadAdministrativa.php';
 require_once '/entidades/administracion/Cliente.php';
 require_once '/entidades/administracion/Municipio.php';
 require_once '/entidades/administracion/Parroquia.php';

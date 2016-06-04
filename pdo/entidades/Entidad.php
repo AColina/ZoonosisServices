@@ -16,10 +16,21 @@
  * limitations under the License.
  */
 
+use Doctrine\ORM\Mapping\MappedSuperclass;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use JMS\Serializer\Annotation\Type;
+
 /** @MappedSuperclass */
 abstract class Entidad {
 
-    /** @Id @Column(type="integer") @GeneratedValue */
+    /**
+     * @Type("integer")
+     * @Id 
+     * @Column(type="integer") 
+     * @GeneratedValue 
+     */
     public $id;
 
     public function getId() {

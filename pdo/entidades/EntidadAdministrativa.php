@@ -6,11 +6,16 @@
  * and open the template in the editor.
  */
 require_once '/Entidad.php';
+use Doctrine\ORM\Mapping\MappedSuperclass;
+use Doctrine\ORM\Mapping\Column;
+use JMS\Serializer\Annotation\Type;
 
 /** @MappedSuperclass */
 abstract class EntidadAdministrativa extends Entidad {
 
-    /** @Column(type="string") */
+    /** 
+     * @Type("string")
+     * @Column(type="string") */
     public $nombre;
 
     public function getNombre() {

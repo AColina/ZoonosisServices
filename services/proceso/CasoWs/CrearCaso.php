@@ -16,21 +16,15 @@
  * limitations under the License.
  */
 
-include("../../../conexion/conect.php");
-include ("../../../funciones/funcion.php");
-include ("../../../funciones/ObjectMapper.php");
-//include("../../../funciones/AnnotationManager.php");
-//include ('../../../funciones/QueryBuilder.php');
-include ("../../../entidades/Proceso/Caso.php");
-include ("../../../entidades/Proceso/Animal_has_Caso.php");
+
+require_once '../../../pdo/ServicesImport.php';
 
 $json = file_get_contents('php://input');
-$mapper = new ObjectMapper($json);
-$caso = $mapper->createObject(Caso::class);
 
-if ($caso == NULL) {
-    die("No se pudo procesar la solicitud");
-}
-$fn = new funcion();
+$pdo = new PDOManager();
 
-echo $fn->createInsert($caso);
+$serializer = JMS\Serializer\SerializerBuilder::create()->build();
+
+$a = $serializer->deserialize($json, Caso::class, 'json');
+
+echo json_encode($a);
