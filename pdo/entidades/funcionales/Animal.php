@@ -17,21 +17,39 @@
  */
 include_once ('/../EntidadAdministrativa.php');
 
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\Column;
+use JMS\Serializer\Annotation\Type;
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * @Entity
  */
 class Animal extends EntidadAdministrativa {
 
     /**
+     * @var Especie 
+     * @Type("Especie")
      * @ManyToOne(targetEntity="Especie", inversedBy="animales")
      * @JoinColumn(name="especie_id", referencedColumnName="id")
      */
     public $especie;
 
-    /** @OneToMany(targetEntity="RegistroVacunacion_has_Animal", mappedBy="animal") */
+    /**
+     * @var ArrayCollection 
+     * @Type("ArrayCollection<RegistroVacunacion_has_Animal>")
+     * @OneToMany(targetEntity="RegistroVacunacion_has_Animal", mappedBy="animal") */
     public $vacunacion_has_Animal;
 
-    /** @OneToMany(targetEntity="Animal_has_Caso", mappedBy="animal") */
+    /**
+     * @var ArrayCollection 
+     * @Type("ArrayCollection<Animal_has_Caso>")
+     * @OneToMany(targetEntity="Animal_has_Caso", mappedBy="animal",cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     *  */
     public $animal_has_Caso;
 
     public function __construct() {
@@ -47,7 +65,14 @@ class Animal extends EntidadAdministrativa {
         return $this->vacunacion_has_Animal;
     }
 
+    /**
+     * 
+     * @return ArrayCollection
+     */
     public function getAnimal_has_Caso() {
+        if ($this->animal_has_Caso == NULL) {
+            $this->animal_has_Caso = new ArrayCollection();
+        }
         return $this->animal_has_Caso;
     }
 

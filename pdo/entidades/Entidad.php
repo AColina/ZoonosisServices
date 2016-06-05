@@ -16,6 +16,9 @@
  * limitations under the License.
  */
 
+require_once '/../../Doctrine/Custom/CustomGenerator.php';
+
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\Mapping\MappedSuperclass;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Column;
@@ -26,19 +29,81 @@ use JMS\Serializer\Annotation\Type;
 abstract class Entidad {
 
     /**
+     * @var int
      * @Type("integer")
      * @Id 
      * @Column(type="integer") 
-     * @GeneratedValue 
+     * @GeneratedValue(strategy="IDENTITY")
      */
     public $id;
 
     public function getId() {
+
         return $this->id;
     }
 
     public function setId($id) {
         $this->id = $id;
+    }
+
+    public function __toString() {
+        return "Entidad{ id= $this->id }";
+    }
+
+    /**
+     * 
+     * @param string $json
+     * @return <Entidad>
+     */
+    static function fromJson($json) {
+        $annotationReader = new AnnotationReader();
+        $serializer = JMS\Serializer\SerializerBuilder::create()->build();
+        $objJson = json_decode($json);
+        $class = new \ReflectionClass(new static());
+        $em = PDOManager::inicializarEntityManager();
+        $result = Entidad::map($class->getName(), $annotationReader, $serializer, $objJson, $em);
+
+        return $result;
+    }
+
+    private static function map($claseName, $annotationReader, $serializer, $objJson, $em) {
+        $class = new \ReflectionClass($claseName);
+        $result = $class->newInstanceWithoutConstructor();
+
+        $publicProps = $class->getProperties();
+        foreach ($publicProps as $prop) {
+            $propName = $prop->name;
+            if (isset($objJson->$propName)) {
+                $value = $objJson->$propName;
+                if (is_object($value)) {
+                    $reflectionProperty = new ReflectionProperty($class->getName(), $propName);
+                    $propertyAnnotations = $annotationReader->getPropertyAnnotation($reflectionProperty, 'JMS\Serializer\Annotation\Type');
+                    $relationJson = json_encode($value, true);
+                    $relationObject = $serializer->deserialize($relationJson, $propertyAnnotations->name, 'json');
+                    $prop->setValue($result, $relationObject);
+                } elseif (is_array($value)) {
+                    $r = array();
+                    $reflectionProperty = new ReflectionProperty($class->getName(), $propName);
+                    $propertyAnnotations = $annotationReader->getPropertyAnnotation($reflectionProperty, 'Doctrine\ORM\Mapping\OneToMany');
+
+                    foreach ($value as $arrayObject) {
+                        $r[] = Entidad::map($propertyAnnotations->targetEntity, $annotationReader, $serializer, $arrayObject, $em);
+                    }
+                    $persistColl = new Doctrine\Common\Collections\ArrayCollection($r);
+
+                    $prop->setValue($result, $persistColl);
+                } else {
+                    $prop->setValue($result, $value);
+                }
+            } else {
+                $prop->setValue($result, null);
+            }
+        }
+        return $result;
+    }
+
+    static function toJson() {
+        return json_encode($this);
     }
 
 }

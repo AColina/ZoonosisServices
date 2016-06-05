@@ -133,6 +133,7 @@ require_once '/../Doctrine/ORM/Proxy/Proxy.php';
 require_once '/../Doctrine/ORM/Query/Parameter.php';
 require_once '/../Doctrine/ORM/Query/ParameterTypeInferer.php';
 require_once '/../Doctrine/ORM/PersistentCollection.php';
+require_once '/../Doctrine/ORM/ORMInvalidArgumentException.php';
 require_once '/../Doctrine/Common/Persistence/Mapping/ReflectionService.php';
 require_once '/../Doctrine/Common/Persistence/Mapping/RuntimeReflectionService.php';
 require_once '/../Doctrine/Instantiator/InstantiatorInterface.php';
@@ -145,7 +146,14 @@ require_once '/../Doctrine/ORM/Mapping/Entity.php';
 require_once '/../Doctrine/ORM/Mapping/ManyToOne.php';
 require_once '/../Doctrine/ORM/Mapping/JoinColumn.php';
 require_once '/../Doctrine/ORM/Mapping/OneToMany.php';
+require_once '/../Doctrine/ORM/Internal/CommitOrderCalculator.php';
+require_once '/../Doctrine/ORM/Id/SequenceGenerator.php';
+require_once '/../Doctrine/DBAL/Statement.php';
+require_once '/../Doctrine/DBAL/Exception/ConstraintViolationException.php';
+require_once '/../Doctrine/DBAL/Exception/NotNullConstraintViolationException.php';
 require_once '/Serializor.php';
+
+use \Doctrine\ORM\EntityManager;
 
 /**
  * Description of PDOManager
@@ -162,9 +170,16 @@ class PDOManager {
     const driver = "pdo_mysql";
 
     //datos de doctrine
+    /**
+     *
+     * @var EntityManager
+     */
     private $entityManager;
-    private $entityTransaction;
     private $ultimoQuery;
+
+    public function __construct() {
+        $this->entityManager = NULL;
+    }
 
     public static function inicializarEntityManager() {
         try {
@@ -188,10 +203,90 @@ class PDOManager {
         return NULL;
     }
 
+    public function iniciarTransaccion() {
+        if ($this->entityManager == null) {
+            $this->entityManager = $this->inicializarEntityManager();
+            $this->entityManager->beginTransaction();
+        }
+    }
+
+    public function finalizarTransaccion($commit) {
+        if ($commit) {
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+        } else {
+            $this->entityManager->rollback();
+        }
+
+        $this->entityManager->close();
+        $this->entityManager = NULL;
+    }
+
+    /**
+     * 
+     * @param class calse
+     * @param integer id
+     * @return Entidad
+     */
+    public function obtenerEntidad($clase, $id) {
+        $entityManager = PDOManager::inicializarEntityManager();
+        $o = $entityManager->find($clase, $id);
+        $entityManager->close();
+        return $o;
+    }
+
+    /**
+     * 
+     * @param object $entidad
+     * @param boolean $usaTransaccion
+     * @return boolean
+     */
+    public function persistirEntidad(Entidad $entidad, $usaTransaccion = FALSE) {
+        if ($usaTransaccion) {
+            $this->entityManager->persist($entidad);
+            $this->entityManager->flush();
+            return true;
+        } else {
+            return $this->operacionCUD($entidad, 'INSERTAR');
+        }
+    }
+
+    /**
+     * 
+     * @param object $entidad
+     * @param boolean $usaTransaccion
+     * @return object
+     */
+    public function actualizarEntidad(Entidad $entidad, $usaTransaccion = FALSE) {
+        if ($usaTransaccion) {
+            return $this->entityManager->merge($entidad);
+        } else {
+            return $this->operacionCUD($entidad, 'ACTUALIZAR');
+        }
+    }
+
+    /**
+     * Elimina un Registro en la Base de Datos
+     *
+     * @param entidad Instancia de una Entidad de JPA
+     * @param idEntidad ID que del Registro
+     * @param usaTransaccion
+     * @return TRUE si la operación termina Exitosamente
+     */
+    public function eliminarEntidad($entidad, $usaTransaccion = FALSE) {
+        if ($usaTransaccion) {
+            $this->entityManager->remove($entidad);
+            return true;
+        } else {
+            return $this->operacionCUD($entidad, 'ELIMINAR');
+        }
+    }
+
     public function ejecutarQuery($query, $parametros, $numeroResultados = 1, $posicionInicial = -1) {
         return $this->createQuery($query, $parametros, false, $numeroResultados, $posicionInicial);
     }
 
+    //METODOS PRIVADOS
     private function createQuery($query, $parametros, $esNamedQuery, $numeroResultados, $posicionInicial) {
 
         $emLocal = PDOManager::inicializarEntityManager();
@@ -201,8 +296,7 @@ class PDOManager {
         } else {
             $queryEjecutable = $emLocal->createQuery($query);
         }
-//        $queryEjecutable->setHint("eclipselink.read-only", "true");
-//        $queryEjecutable->setHint("eclipselink.query-results-cache", "true");
+
         return $this->ejecutarQueryGeneral($queryEjecutable, $emLocal, $parametros, $numeroResultados, $posicionInicial);
     }
 
@@ -234,16 +328,48 @@ class PDOManager {
         }
     }
 
-    public function obtenerEntidad($clase, $id) {
+    private function operacionCUD($entidad, $operaciones) {
+        $pdo = new PDOManager();
+        try {
+            $pdo->iniciarTransaccion();
+            $emLocal = $pdo->getEntityManager();
+            $rt = true;
+            switch ($operaciones) {
+                case 'INSERTAR':
+                    $emLocal->persist($entidad);
+                    $emLocal->flush();
+                    break;
+                case 'ACTUALIZAR':
+                    $rt = $emLocal->merge($entidad);
+                    $emLocal->flush();
+                    break;
+                case 'ELIMINAR':
+                    $emLocal->remove($entidad);
+                    $emLocal->flush();
+                    break;
+            }
 
-        $entityManager = PDOManager::inicializarEntityManager();
-        $o = $entityManager->find($clase, $id);
-        $entityManager->close();
-        return $o;
+            $pdo->finalizarTransaccion(true);
+            return $rt;
+        } catch (\Exception $ex) {
+            echo "ERROR AL INTENTAR HACER UNA OPERACION CUD: " . $ex->getMessage() . "<br>";
+            return false;
+        } finally {
+            $emLocal->close();
+        }
     }
 
+    //GETTER
     public function getUltimoQuery() {
         return $this->ultimoQuery;
+    }
+
+    /**
+     * 
+     * @return EntityManager
+     */
+    public function getEntityManager() {
+        return $this->entityManager;
     }
 
 }

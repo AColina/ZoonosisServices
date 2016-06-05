@@ -16,18 +16,32 @@
  * limitations under the License.
  */
 
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
+use JMS\Serializer\Annotation\Type;
+
 /**
  * @Entity
  */
 class Animal_has_Caso {
 
-    /** @Column(type="integer") */
+    /**
+     * @Type("integer")
+     * @Column(type="integer") 
+     */
     public $cantidadIngresado;
 
-    /** @Column(type="integer") */
+    /**
+     * @Type("integer") 
+     * @Column(type="integer") 
+     */
     public $cantidadPositivos;
 
     /**
+     * @Type("Animal")
      * @Id
      * @ManyToOne(targetEntity="Animal", inversedBy="animal_has_Caso")
      * @JoinColumn(name="animal_id", referencedColumnName="id")
@@ -35,6 +49,7 @@ class Animal_has_Caso {
     public $animal;
 
     /**
+     * @Type("Caso")
      * @Id
      * @ManyToOne(targetEntity="Caso", inversedBy="animal_has_Caso")
      * @JoinColumn(name="caso_id", referencedColumnName="id")

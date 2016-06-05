@@ -17,14 +17,47 @@
  */
 
 
-require_once '../../../pdo/ServicesImport.php';
+require_once '/../../../pdo/ServicesImport.php';
 
 $json = file_get_contents('php://input');
 
 $pdo = new PDOManager();
+$em = $pdo->inicializarEntityManager();
+$em->clear();
+$caso = Caso::fromJson($json);
 
-$serializer = JMS\Serializer\SerializerBuilder::create()->build();
+$em->beginTransaction();
 
-$a = $serializer->deserialize($json, Caso::class, 'json');
+$parroquia = $em->find(Parroquia::class, $caso->getParroquia()->getId());
+$semana = $em->find(Semana::class, $caso->getSemana()->getId());
 
-echo json_encode($a);
+$animal_has_casos = $caso->getAnimal_has_Caso();
+
+if ($caso->getId() == NULL) {
+    $caso = new \Caso();
+    $caso->setParroquia($parroquia);
+    $caso->setSemana($parroquia);
+    $caso->setFechaElaboracion(new DateTime());
+    $em->persist($caso);
+    $em->flush();
+}
+$caso = $em->find(Caso::class, $caso->getId());
+
+foreach ($animal_has_casos as $animal_has_caso) {
+    $tem = new Animal_has_Caso();
+    $animal = $em->find(Animal::class, $animal_has_caso->getAnimal()->getId());
+
+    $tem->setCantidadIngresado($animal_has_caso->getCantidadIngresado());
+    $tem->setCantidadPositivos($animal_has_caso->getCantidadPositivos());
+    $tem->setAnimal($animal);
+    $tem->setCaso($caso);
+
+    $animal->getAnimal_has_Caso()->add($tem);
+    $caso->getAnimal_has_Caso()->add($tem);
+}
+
+$em->flush();
+$em->commit();
+$em->close();
+echo H57\Util\Serializor::json_encode($caso);
+//var_dump($caso);

@@ -22,6 +22,8 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\OneToMany;
 use JMS\Serializer\Annotation\Type;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity
@@ -29,27 +31,30 @@ use JMS\Serializer\Annotation\Type;
 class Parroquia extends EntidadAdministrativa {
 
     /**
+     * @var Municipio 
      * @Type("Municipio")
-     * @ManyToOne(targetEntity="Municipio", inversedBy="parroquias")
-     * @JoinColumn(name="municipio_id", referencedColumnName="id")
+     * @ManyToOne(targetEntity="Municipio")
+     * @JoinColumn(name="municipio_id", nullable=false)
      */
     public $municipio;
 
     /**
-     * @Type("array<Cliente>")
+     * @var Collection 
+     * @Type("ArrayCollection<Cliente>")
      * @OneToMany(targetEntity="Cliente", mappedBy="parroquia") 
      */
     public $clientes;
 
     /**
-     * @Type("array<Vacunacion>")
+     * @var Collection 
+     * @Type("ArrayCollection<Vacunacion>")
      * @OneToMany(targetEntity="Vacunacion", mappedBy="parroquia")
      *  */
     public $vacunaciones;
 
     /**
      * @Type("array<Caso>")
-     * @OneToMany(targetEntity="Caso", mappedBy="parroquia") 
+     * @OneToMany(targetEntity="Caso", mappedBy="parroquia", cascade={"remove"}) 
      */
     public $casos;
 
@@ -70,7 +75,14 @@ class Parroquia extends EntidadAdministrativa {
         return $this->vacunaciones;
     }
 
+    /**
+     * 
+     * @return ArrayCollection<Caso>
+     */
     public function getCasos() {
+        if ($this->casos== NULL) {
+            $this->casos = new ArrayCollection();
+        }
         return $this->casos;
     }
 

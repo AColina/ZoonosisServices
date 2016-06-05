@@ -17,12 +17,13 @@
  */
 require_once ('/../Entidad.php');
 
-use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use JMS\Serializer\Annotation\Type;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity
@@ -30,28 +31,32 @@ use JMS\Serializer\Annotation\Type;
 class Caso extends Entidad {
 
     /**
-     * @Type("DateTime")
+     * @var DateTime 
+     * @Type("DateTime('dd-MM-yyyy')")
      * @Column(type="date") 
      */
     public $fechaElaboracion;
 
     /**
+     * @var Parroquia 
      * @Type("Parroquia")
-     * @ManyToOne(targetEntity="Parroquia", inversedBy="casos")
-     * @JoinColumn(name="parroquia_id", referencedColumnName="id")
+     * @ManyToOne(targetEntity="Parroquia")
+     * @JoinColumn(name="parroquia_id")
      */
     public $parroquia;
 
     /**
+     * @var Semana 
      * @Type("Semana")
-     * @ManyToOne(targetEntity="Semana", inversedBy="casos")
-     * @JoinColumn(name="semana_id", referencedColumnName="id")
+     * @ManyToOne(targetEntity="Semana")
+     * @JoinColumn(name="semana_id")
      */
     public $semana;
 
     /**
-     * @Type("array<Animal_has_Caso>")
-     * @OneToMany(targetEntity="Animal_has_Caso", mappedBy="caso") 
+     * @var ArrayCollection 
+     * @Type("ArrayCollection<Animal_has_Caso>")
+     * @OneToMany(targetEntity="Animal_has_Caso", mappedBy="caso", cascade={"persist", "remove"}, orphanRemoval=TRUE) 
      */
     public $animal_has_Caso;
 
@@ -60,31 +65,53 @@ class Caso extends Entidad {
     }
 
     //GETTER AND SETTER
+    /**
+     * 
+     * @return DateTime
+     */
     public function getFechaElaboracion() {
         return $this->fechaElaboracion;
     }
 
+    /**
+     * 
+     * @return Parroquia
+     */
     public function getParroquia() {
         return $this->parroquia;
     }
 
+    /**
+     * 
+     * @return Semana
+     */
     public function getSemana() {
         return $this->semana;
     }
 
+    /**
+     * 
+     * @return ArrayCollection
+     */
     public function getAnimal_has_Caso() {
+        if ($this->animal_has_Caso == NULL) {
+            $this->animal_has_Caso = new ArrayCollection();
+        }
         return $this->animal_has_Caso;
     }
 
-    public function setFechaElaboracion($fechaElaboracion) {
+    public function setFechaElaboracion(DateTime $fechaElaboracion) {
         $this->fechaElaboracion = $fechaElaboracion;
     }
 
     public function setParroquia($parroquia) {
+        if ($parroquia != null) {
+            $parroquia->getCasos()->add($this);
+        }
         $this->parroquia = $parroquia;
     }
 
-    public function setSemana($semana) {
+    public function setSemana(Semana $semana) {
         $this->semana = $semana;
     }
 

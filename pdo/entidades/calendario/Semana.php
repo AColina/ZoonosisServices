@@ -31,7 +31,7 @@ class Semana extends Entidad {
     /** @OneToMany(targetEntity="Vacunacion", mappedBy="semana") */
     public $vacunaciones;
 
-    /** @OneToMany(targetEntity="Caso", mappedBy="semana") */
+    /** @OneToMany(targetEntity="Caso", mappedBy="semana", cascade={"remove"}) */
     public $casos;
 
     public function __construct() {
