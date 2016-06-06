@@ -16,14 +16,21 @@
  * limitations under the License.
  */
 
+require '/../../pdo/QueryBuilder.php';
 
-require_once '/../../../pdo/ServicesImport.php';
-$em=  PDOManager::inicializarEntityManager();
+$year = isset($_GET['year']) ? $_GET['year'] : NULL;
+$number = isset($_GET['number']) ? "% " . $_GET['number'] : NULL;
 
-$json = file_get_contents('php://input');
+if ($year == null) {
+    die("Year is required");
+} else if ($number == NULL) {
+    die("number is required");
+}
 
-$persona=  Persona::fromJson($json);
-$em->persist($persona);
-$em->flush();
+$qb = new QueryBuilder("SELECT s FROM Semana s", "ORDER By s.semana");
+$r = $qb->agregarCondicion("s.year", "=", $year)
+        ->agregarCondicion("s.semana", "Like", $number)
+        ->ejecutarQuery();
 
-echo H57\Util\Serializor::json_encode($persona);
+
+echo H57\Util\Serializor::json_encode($r);

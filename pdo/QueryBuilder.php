@@ -9,16 +9,38 @@ require_once '/EntityImport.php';
  */
 class QueryBuilder {
 
+    /**
+     *
+     * @var string
+     */
     private $query;
+
+    /**
+     *
+     * @var array
+     */
     private $parametros = array();
+
+    /**
+     *
+     * @var integer
+     */
     private $contador = 1;
 
     /**
-     * QueryBuilder constructor.
-     * @param $query
+     *
+     * @var string
      */
-    public function __construct($query) {
+    private $sentenciaFinal;
+
+    /**
+     * 
+     * @param string $query
+     * @param string $sentenciaFinal
+     */
+    public function __construct($query, $sentenciaFinal = "") {
         $this->query = $query;
+        $this->sentenciaFinal = $sentenciaFinal;
     }
 
     public function agregarQuery($query) {
@@ -50,10 +72,8 @@ class QueryBuilder {
 
     public function ejecutarQuery($numeroResultados = 1, $posicionInicial = -1) {
         $pdo = new PDOManager();
+        $this->query = $this->query . " " . $this->sentenciaFinal;
         $valores = $pdo->ejecutarQuery($this->query, count($this->parametros) > 0 ? $this->parametros : null, $numeroResultados, $posicionInicial);
-        if ($numeroResultados == 1) {
-            return count($valores) > 0 ? $valores[1] : NULL;
-        }
         return $valores;
     }
 

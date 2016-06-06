@@ -15,15 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
-require_once '/../../../pdo/ServicesImport.php';
-$em=  PDOManager::inicializarEntityManager();
-
+require_once '/../../pdo/ServicesImport.php';
 $json = file_get_contents('php://input');
 
-$persona=  Persona::fromJson($json);
-$em->persist($persona);
-$em->flush();
+$pojo = json_decode($json);
+$em = PDOManager::inicializarEntityManager();
 
-echo H57\Util\Serializor::json_encode($persona);
+for ($i = 0; $i < $pojo->semanas; $i++) {
+    $semana = new \Semana();
+    $semana->setYear(ceil($pojo->year));
+    $semana->setSemana("Semana " . ($i + 1));
+    $em->persist($semana);
+}
+$em->flush();

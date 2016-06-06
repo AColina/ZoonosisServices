@@ -17,13 +17,17 @@
  */
 
 
-require_once '/../../../pdo/ServicesImport.php';
-$em=  PDOManager::inicializarEntityManager();
+require '/../../pdo/QueryBuilder.php';
 
-$json = file_get_contents('php://input');
+$year = isset($_GET['year']) ? $_GET['year'] : NULL;
 
-$persona=  Persona::fromJson($json);
-$em->persist($persona);
-$em->flush();
+if ($year == null) {
+    die("Year is required");
+}
 
-echo H57\Util\Serializor::json_encode($persona);
+$qb = new QueryBuilder("SELECT s FROM Semana s");
+$r = $qb->agregarCondicion("s.year", "=", $year)
+        ->ejecutarQuery(-1);
+
+
+echo H57\Util\Serializor::json_encode($r);

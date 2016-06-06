@@ -25,7 +25,7 @@ class Semana extends Entidad {
     /** @Column(type="string") */
     public $semana;
 
-    /** @Column(type="Integer") */
+    /** @Column(type="integer") */
     public $year;
 
     /** @OneToMany(targetEntity="Vacunacion", mappedBy="semana") */
