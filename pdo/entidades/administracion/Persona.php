@@ -17,21 +17,34 @@
  */
 include_once ('/../EntidadAdministrativa.php');
 
+use Doctrine\ORM\Mapping\Entity,
+    Doctrine\ORM\Mapping\Column,
+    Doctrine\ORM\Mapping\OneToOne,
+    JMS\Serializer\Annotation\Type;
+
 /**
  * @Entity 
  */
 class Persona extends EntidadAdministrativa {
 
-    /** @Column(type="string") */
+    /**
+     * @Type("string")
+     * @Column(type="string") */
     public $apellido;
 
-    /** @Column(type="string") */
+    /**
+     * @Type("string")
+     * @Column(type="string") */
     public $cedula;
 
-    /** @OneToOne(targetEntity="Cliente", mappedBy="persona") */
+    /**
+     * @Type("Cliente")
+     * @OneToOne(targetEntity="Cliente", mappedBy="persona") */
     public $cliente;
 
-    /** @OneToOne(targetEntity="Usuario", mappedBy="persona") */
+    /**
+     * @Type("Usuario")
+     * @OneToOne(targetEntity="Usuario", mappedBy="persona") */
     public $usuario;
 
     public function __construct() {

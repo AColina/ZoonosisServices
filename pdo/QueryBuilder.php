@@ -73,7 +73,11 @@ class QueryBuilder {
     public function ejecutarQuery($numeroResultados = 1, $posicionInicial = -1) {
         $pdo = new PDOManager();
         $this->query = $this->query . " " . $this->sentenciaFinal;
+//        echo $this->query;
         $valores = $pdo->ejecutarQuery($this->query, count($this->parametros) > 0 ? $this->parametros : null, $numeroResultados, $posicionInicial);
+        if ($numeroResultados == 1 && is_array($valores)) {
+            return $valores[1];
+        }
         return $valores;
     }
 

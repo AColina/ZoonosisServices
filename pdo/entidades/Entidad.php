@@ -17,13 +17,15 @@
  */
 
 require_once '/../../Doctrine/Custom/CustomGenerator.php';
+require_once '/../ReflectionUtils.php';
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\ORM\Mapping\MappedSuperclass;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use JMS\Serializer\Annotation\Type;
+use Doctrine\Common\Annotations\AnnotationReader,
+    Doctrine\ORM\Mapping\MappedSuperclass,
+    Doctrine\ORM\Mapping\Id,
+    Doctrine\ORM\Mapping\Column,
+    Doctrine\ORM\Mapping\GeneratedValue,
+    JMS\Serializer\Annotation\Type,
+    JMS\Parser\SyntaxErrorException;
 
 /** @MappedSuperclass */
 abstract class Entidad {
@@ -79,7 +81,11 @@ abstract class Entidad {
                     $reflectionProperty = new ReflectionProperty($class->getName(), $propName);
                     $propertyAnnotations = $annotationReader->getPropertyAnnotation($reflectionProperty, 'JMS\Serializer\Annotation\Type');
                     $relationJson = json_encode($value, true);
-                    $relationObject = $serializer->deserialize($relationJson, $propertyAnnotations->name, 'json');
+                    try {
+                        $relationObject = $serializer->deserialize($relationJson, $propertyAnnotations->name, 'json');
+                    } catch (SyntaxErrorException $ex) {
+                        $relationObject = Entidad::privateMap($propertyAnnotations->name, $annotationReader, $serializer, $relationJson, $em);
+                    }
                     $prop->setValue($result, $relationObject);
                 } elseif (is_array($value)) {
                     $r = array();
@@ -97,6 +103,24 @@ abstract class Entidad {
                 }
             } else {
                 $prop->setValue($result, null);
+            }
+        }
+        return $result;
+    }
+
+    private static function privateMap($claseName, $annotationReader, $serializer, $json, $em) {
+        $ref = new \ReflectionUtils();
+        $class = new \ReflectionClass($claseName);
+        $result = $class->newInstanceWithoutConstructor();
+        $value = json_decode($json, TRUE);
+        foreach ($value as $key => $field) {
+            if (is_array($field)) {
+                $reflectionProperty = new ReflectionProperty($claseName, $key);
+                $propertyAnnotations = $annotationReader->getPropertyAnnotation($reflectionProperty, 'JMS\Serializer\Annotation\Type');
+                $r = Entidad::map($propertyAnnotations->name, $annotationReader, $serializer, $field, $em);
+                $ref->setValor($result, $key, $r);
+            } else {
+                $ref->setValor($result, $key, $field);
             }
         }
         return $result;

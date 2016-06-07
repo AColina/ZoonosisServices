@@ -17,13 +17,13 @@
  */
 require_once ('/../EntidadAdministrativa.php');
 
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\OneToMany;
-use JMS\Serializer\Annotation\Type;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping\Entity,
+ Doctrine\ORM\Mapping\ManyToOne,
+ Doctrine\ORM\Mapping\JoinColumn,
+ Doctrine\ORM\Mapping\OneToMany,
+ JMS\Serializer\Annotation\Type,
+ Doctrine\Common\Collections\Collection,
+ Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity

@@ -80,6 +80,7 @@ require_once '/../JMS/Serializer/Exception/Exception.php';
 require_once '/../JMS/Serializer/Exception/RuntimeException.php';
 require_once '/../JMS/Serializer/Exception/InvalidArgumentException.php';
 require_once '/../JMS/Serializer/Exception/UnsupportedFormatException.php';
+require_once '/../JMS/Parser/SyntaxErrorException.php';
 require_once '/../PhpOption/Option.php';
 require_once '/../PhpOption/Some.php';
 

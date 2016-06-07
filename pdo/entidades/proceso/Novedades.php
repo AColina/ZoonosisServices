@@ -17,26 +17,42 @@
  */
 include_once ('/../EntidadAdministrativa.php');
 
+use Doctrine\ORM\Mapping\Entity,
+    Doctrine\ORM\Mapping\Column,
+    Doctrine\ORM\Mapping\ManyToOne,
+    Doctrine\ORM\Mapping\JoinColumn,
+    JMS\Serializer\Annotation\Type;
+
 /**
  * @Entity 
  */
 class Novedades extends EntidadAdministrativa {
 
-    /** @Column(type="date") */
+    /**
+     * @var DateTime 
+     * @Type("DateTime('dd-MM-yyyy')")
+     * @Column(type="date") */
     public $fechaElaboracion;
 
-    /** @Column(type="text") */
+    /**
+     * @var string 
+     * @Type("string") 
+     * @Column(type="text") */
     public $descripcion;
 
     /**
-     * @ManyToOne(targetEntity="Cliente", inversedBy="novedades")
+     * @var Cliente
+     * @Type("Cliente")
+     * @ManyToOne(targetEntity="Cliente", inversedBy="novedades",cascade={"persist","merge"})
      * @JoinColumn(name="cliente_id", referencedColumnName="id")
      */
     public $cliente;
 
     /**
-     * @ManyToOne(targetEntity="Usuario", inversedBy="novedades")
-     * @JoinColumn(name="usuario_id", referencedColumnName="id")
+     * @var Usuario
+     * @Type("Usuario")
+     * @ManyToOne(targetEntity="Usuario")
+     * @JoinColumn(name="usuario_id")
      */
     public $usuario;
 

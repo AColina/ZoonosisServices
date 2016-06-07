@@ -17,12 +17,20 @@
  */
 include_once ('/../EntidadAdministrativa.php');
 
+use Doctrine\ORM\Mapping\Entity,
+    JMS\Serializer\Annotation\Type,
+    Doctrine\ORM\Mapping\OneToMany,
+    Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * @Entity
  */
 class Especie extends EntidadAdministrativa {
 
-    /** @OneToMany(targetEntity="Animal", mappedBy="especie") */
+    /**
+     * @var ArrayCollection
+     * @Type("ArrayCollection<Animal>")
+     * @OneToMany(targetEntity="Animal", mappedBy="especie") */
     public $animales;
 
     public function __construct() {

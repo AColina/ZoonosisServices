@@ -17,14 +17,13 @@
  */
 include_once ('/../EntidadAdministrativa.php');
 
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\OneToMany;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\Column;
-use JMS\Serializer\Annotation\Type;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping\Entity,
+    Doctrine\ORM\Mapping\ManyToOne,
+    Doctrine\ORM\Mapping\OneToMany,
+    Doctrine\ORM\Mapping\JoinColumn,
+    Doctrine\ORM\Mapping\Column,
+    JMS\Serializer\Annotation\Type,
+    Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity
@@ -42,7 +41,8 @@ class Animal extends EntidadAdministrativa {
     /**
      * @var ArrayCollection 
      * @Type("ArrayCollection<RegistroVacunacion_has_Animal>")
-     * @OneToMany(targetEntity="RegistroVacunacion_has_Animal", mappedBy="animal") */
+     * @OneToMany(targetEntity="RegistroVacunacion_has_Animal", mappedBy="animal",
+     * cascade={"persist", "remove"}, orphanRemoval=TRUE) */
     public $vacunacion_has_Animal;
 
     /**
@@ -61,7 +61,14 @@ class Animal extends EntidadAdministrativa {
         return $this->especie;
     }
 
+    /**
+     * 
+     * @return ArrayCollection
+     */
     public function getVacunacion_has_Animal() {
+        if ($this->vacunacion_has_Animal == NULL) {
+            $this->vacunacion_has_Animal = new ArrayCollection();
+        }
         return $this->vacunacion_has_Animal;
     }
 

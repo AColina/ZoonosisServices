@@ -15,31 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-require_once '/Entidad.php';
 
-use Doctrine\ORM\Mapping\MappedSuperclass,
-    Doctrine\ORM\Mapping\Column,
-    JMS\Serializer\Annotation\Type;
+$user = isset($_GET['usr']) ? $_GET['usr'] : NULL;
+$pass = isset($_GET['pass']) ? $_GET['pass'] : NULL;
 
-/** @MappedSuperclass */
-abstract class EntidadAdministrativa extends Entidad {
-
-    /**
-     * @var string 
-     * @Type("string")
-     * @Column(type="string") */
-    public $nombre;
-
-    public function getNombre() {
-        return $this->nombre;
-    }
-
-    public function setNombre($nombre) {
-        $this->nombre = $nombre;
-    }
-
-    public function __toString() {
-        return $this->nombre;
-    }
-
+if ($user == null) {
+    die("User is required");
+} else if ($pass == null) {
+    die("Pass is required");
 }
+
+require '/../../../pdo/QueryBuilder.php';
+
+$qb = new QueryBuilder("SELECT u FROM Usuario u");
+$us = $qb->agregarCondicion("u.nombre", "=", $user)->ejecutarQuery();
+
+if ($us == null || $us->getContrasena() != $pass) {
+    $us = new \Usuario();
+    $us->setNombre("error");
+    $us->setContrasena("Usuario o contraseña invalido");
+}
+
+echo H57\Util\Serializor::json_encode($us);

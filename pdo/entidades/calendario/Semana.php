@@ -17,21 +17,35 @@
  */
 include_once ('/../Entidad.php');
 
+use Doctrine\ORM\Mapping\Entity,
+    Doctrine\ORM\Mapping\OneToMany,
+    Doctrine\ORM\Mapping\Column,
+    JMS\Serializer\Annotation\Type,
+    Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * @Entity
  */
 class Semana extends Entidad {
 
-    /** @Column(type="string") */
+    /**
+     * @Type("string")
+     * @Column(type="string") */
     public $semana;
 
-    /** @Column(type="integer") */
+    /**
+     * @Type("integer")
+     * @Column(type="integer") */
     public $year;
 
-    /** @OneToMany(targetEntity="Vacunacion", mappedBy="semana") */
+    /**
+     * @Type("ArrayCollection<Vacunacion>")
+     * @OneToMany(targetEntity="Vacunacion", mappedBy="semana") */
     public $vacunaciones;
 
-    /** @OneToMany(targetEntity="Caso", mappedBy="semana", cascade={"remove"}) */
+    /**
+     * @Type("ArrayCollection<Caso>")
+     * @OneToMany(targetEntity="Caso", mappedBy="semana", cascade={"remove"}) */
     public $casos;
 
     public function __construct() {

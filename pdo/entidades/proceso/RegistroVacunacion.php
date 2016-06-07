@@ -17,24 +17,36 @@
  */
 include_once ('/../Entidad.php');
 
+use Doctrine\ORM\Mapping\Entity,
+    Doctrine\ORM\Mapping\Column,
+    Doctrine\ORM\Mapping\ManyToOne,
+    Doctrine\ORM\Mapping\OneToMany,
+    Doctrine\Common\Collections\ArrayCollection,
+    Doctrine\ORM\Mapping\JoinColumn,
+    JMS\Serializer\Annotation\Type;
+
 /**
  * @Entity
  */
 class RegistroVacunacion extends Entidad {
 
     /**
+     * @Type("Vacunacion")
      * @ManyToOne(targetEntity="Vacunacion", inversedBy="registroVacunacion")
      * @JoinColumn(name="vacunacion_id", referencedColumnName="id")
      */
     public $vacunacion;
 
     /**
-     * @ManyToOne(targetEntity="Usuario", inversedBy="$registroVacunacion")
+     * @Type("Usuario")
+     * @ManyToOne(targetEntity="Usuario", inversedBy="registroVacunacion")
      * @JoinColumn(name="usuario_id", referencedColumnName="id")
      */
     public $usuario;
 
-    /** @OneToMany(targetEntity="RegistroVacunacion_has_Animal", mappedBy="$registroVacunacion") */
+    /**
+     * @Type("ArrayCollection<RegistroVacunacion_has_Animal>")
+     * @OneToMany(targetEntity="RegistroVacunacion_has_Animal", mappedBy="registroVacunacion",cascade={"all"}) */
     public $registroVacunacion_has_Animal;
 
     public function __construct() {
@@ -51,7 +63,14 @@ class RegistroVacunacion extends Entidad {
         return $this->usuario;
     }
 
+    /**
+     * 
+     * @return ArrayCollection<RegistroVacunacion_has_Animal>
+     */
     public function getRegistroVacunacion_has_Animal() {
+        if ($this->registroVacunacion_has_Animal == NULL) {
+            $this->registroVacunacion_has_Animal = new ArrayCollection();
+        }
         return $this->registroVacunacion_has_Animal;
     }
 

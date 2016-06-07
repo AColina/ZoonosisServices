@@ -15,38 +15,60 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include_once ('/../Entidad.php');
+include_once ('/../EntidadAdministrativa.php');
+
+use Doctrine\ORM\Mapping\Entity,
+    Doctrine\ORM\Mapping\Column,
+    Doctrine\ORM\Mapping\ManyToOne,
+    Doctrine\ORM\Mapping\OneToOne,
+    Doctrine\ORM\Mapping\OneToMany,
+    Doctrine\Common\Collections\ArrayCollection,
+    Doctrine\ORM\Mapping\JoinColumn,
+    JMS\Serializer\Annotation\Type;
 
 /**
  * @Entity 
  */
-class Usuario extends Entidad {
+class Usuario extends EntidadAdministrativa {
 
-    /** @Column(type="string") */
-    public $usuario;
-
-    /** @Column(type="string") */
+    /**
+     * @var string 
+     * @Type("string")
+     * @Column(type="string") */
     public $contrasena;
 
-    /** @Column(type="date") */
+    /**
+     * @var DateTime 
+     * @Type("DateTime('dd-MM-yyyy')")
+     * @Column(type="date") */
     public $fechaNacimiento;
 
     /**
+     * @var Persona 
+     * @Type("Persona")
      * @OneToOne(targetEntity="Persona", inversedBy="usuario")
      * @JoinColumn(name="persona_id", referencedColumnName="id")
      */
     public $persona;
 
-    /** @OneToMany(targetEntity="Novedades", mappedBy="usuario") */
+    /**
+     * @var ArrayCollection 
+     * @Type("ArrayCollection<Novedades>")
+     *  @OneToMany(targetEntity="Novedades", mappedBy="usuario") */
     public $novedades;
 
     /**
+     * @var Permiso 
+     * @Type("Permiso")
      * @ManyToOne(targetEntity="Permiso", inversedBy="usuarios")
      * @JoinColumn(name="permiso_id", referencedColumnName="id")
      */
     public $permiso;
 
-    /** @OneToMany(targetEntity="RegistroVacunacion", mappedBy="usuario") */
+    /**
+     * @var ArrayCollection 
+     * @Type("ArrayCollection<RegistroVacunacion>")
+     * @OneToMany(targetEntity="RegistroVacunacion", mappedBy="usuario") */
     public $registroVacunacion;
 
     public function __construct() {
@@ -54,9 +76,7 @@ class Usuario extends Entidad {
     }
 
     //GETTER AND SETTER
-    public function getUsuario() {
-        return $this->usuario;
-    }
+
 
     public function getContrasena() {
         return $this->contrasena;
@@ -79,11 +99,10 @@ class Usuario extends Entidad {
     }
 
     public function getRegistroVacunacion() {
+        if ($this->registroVacunacion == NULL) {
+            $this->registroVacunacion = new ArrayCollection();
+        }
         return $this->registroVacunacion;
-    }
-
-    public function setUsuario($usuario) {
-        $this->usuario = $usuario;
     }
 
     public function setContrasena($contrasena) {

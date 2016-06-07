@@ -17,35 +17,56 @@
  */
 include_once ('/../Entidad.php');
 
+use Doctrine\ORM\Mapping\Entity,
+    Doctrine\ORM\Mapping\OneToMany,
+    Doctrine\ORM\Mapping\ManyToOne,
+    Doctrine\ORM\Mapping\OneToOne,
+    Doctrine\ORM\Mapping\JoinColumn,
+    Doctrine\ORM\Mapping\Column,
+    JMS\Serializer\Annotation\Type,
+    Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * @Entity 
  */
 class Cliente extends Entidad {
 
-    /** @Column(type="string") */
+    /**
+     * @Type("string")
+     * @Column(type="string") */
     public $telefono;
 
-    /** @Column(type="string") */
+    /**
+     * @Type("string")
+     * @Column(type="string") */
     public $correo;
 
-    /** @Column(type="text") */
+    /**
+     * @Type("string")
+     * @Column(type="string") */
     public $direccion;
 
     //relaciones
 
     /**
+     * 
+     * @Type("Parroquia")
      * @ManyToOne(targetEntity="Parroquia", inversedBy="clientes")
      * @JoinColumn(name="parroquia_id", referencedColumnName="id")
      */
     public $parroquia;
 
     /**
+     * @Type("Persona")
      * @OneToOne(targetEntity="Persona", inversedBy="cliente")
      * @JoinColumn(name="persona_id", referencedColumnName="id")
      */
     public $persona;
 
-    /** @OneToMany(targetEntity="Novedades", mappedBy="cliente") */
+    /**
+     * @var ArrayCollection 
+     * @Type("ArrayCollection<Vacunacion>")
+     * @OneToMany(targetEntity="Novedades", mappedBy="cliente") */
     public $novedades;
 
     public function __construct() {

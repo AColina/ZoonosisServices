@@ -36,7 +36,7 @@ $animal_has_casos = $caso->getAnimal_has_Caso();
 if ($caso->getId() == NULL) {
     $caso = new \Caso();
     $caso->setParroquia($parroquia);
-    $caso->setSemana($parroquia);
+    $caso->setSemana($semana);
     $caso->setFechaElaboracion(new DateTime());
     $em->persist($caso);
     $em->flush();

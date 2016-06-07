@@ -15,31 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-require_once '/Entidad.php';
 
-use Doctrine\ORM\Mapping\MappedSuperclass,
-    Doctrine\ORM\Mapping\Column,
-    JMS\Serializer\Annotation\Type;
+$dia = isset($_GET['dia']) ? $_GET['dia'] : NULL;
+$parroquia = isset($_GET['parroquia']) ? ceil($_GET['parroquia']) : NULL;
 
-/** @MappedSuperclass */
-abstract class EntidadAdministrativa extends Entidad {
-
-    /**
-     * @var string 
-     * @Type("string")
-     * @Column(type="string") */
-    public $nombre;
-
-    public function getNombre() {
-        return $this->nombre;
-    }
-
-    public function setNombre($nombre) {
-        $this->nombre = $nombre;
-    }
-
-    public function __toString() {
-        return $this->nombre;
-    }
-
+if ($dia == NULL) {
+    die('Es obligatorio seleccionar una fecha');
+} else if ($parroquia == NULL) {
+    die('Es obligatorio seleccionar una parroquia');
 }
+
+require '../../../pdo/QueryBuilder.php';
+
+$qb = new QueryBuilder("SELECT c FROM Caso c JOIN c.parroquia p");
+$resultado = $qb->agregarCondicion("c.fechaElaboracion", "=", $dia)->
+        agregarCondicion("p.id", "=", $parroquia)->
+        ejecutarQuery();
+echo json_encode($resultado);

@@ -16,15 +16,26 @@
  * limitations under the License.
  */
 
+use Doctrine\ORM\Mapping\Entity,
+    Doctrine\ORM\Mapping\Column,
+    Doctrine\ORM\Mapping\Id,
+    Doctrine\ORM\Mapping\ManyToOne,
+    Doctrine\ORM\Mapping\JoinColumn,
+    JMS\Serializer\Annotation\Type;
+
 /**
  * @Entity
  */
 class RegistroVacunacion_has_Animal {
 
-    /** @Column(type="integer") */
+    /**
+     * @var integer 
+     * @Type("integer")
+     * @Column(type="integer") */
     public $cantidad;
 
     /**
+     * @Type("RegistroVacunacion")
      * @Id
      * @ManyToOne(targetEntity="RegistroVacunacion", inversedBy="registroVacunacion_has_Animal")
      * @JoinColumn(name="registroVacunacion_id", referencedColumnName="id")
@@ -32,6 +43,7 @@ class RegistroVacunacion_has_Animal {
     public $registroVacunacion;
 
     /**
+     * @Type("Animal")
      * @Id
      * @ManyToOne(targetEntity="Animal", inversedBy="vacunacion_has_Animal")
      * @JoinColumn(name="animal_id", referencedColumnName="id")

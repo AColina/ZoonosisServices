@@ -17,27 +17,43 @@
  */
 include_once ('/../Entidad.php');
 
+use Doctrine\ORM\Mapping\Entity,
+    Doctrine\ORM\Mapping\Column,
+    Doctrine\ORM\Mapping\ManyToOne,
+    Doctrine\ORM\Mapping\OneToMany,
+    Doctrine\Common\Collections\ArrayCollection,
+    Doctrine\ORM\Mapping\JoinColumn,
+    JMS\Serializer\Annotation\Type;
+
 /**
  * @Entity
  */
 class Vacunacion extends Entidad {
 
-    /** @Column(type="date") */
+    /**
+     * @var DateTime 
+     * @Type("DateTime('dd-MM-yyyy')")
+     * @Column(type="date") */
     public $fechaElaboracion;
 
     /**
+     * @Type("Semana")
      * @ManyToOne(targetEntity="Semana", inversedBy="vacunaciones")
      * @JoinColumn(name="semana_id", referencedColumnName="id")
      */
     public $semana;
 
     /**
+     * @Type("Parroquia")
      * @ManyToOne(targetEntity="Parroquia", inversedBy="vacunaciones")
      * @JoinColumn(name="parroquia_id", referencedColumnName="id")
      */
     public $parroquia;
 
-    /** @OneToMany(targetEntity="RegistroVacunacion", mappedBy="$vacunacion") */
+    /**
+     * @Type("ArrayCollection<RegistroVacunacion>")
+     * @OneToMany(targetEntity="RegistroVacunacion", mappedBy="vacunacion",cascade={"all"})
+     *  */
     public $registroVacunacion;
 
     public function __construct() {
@@ -58,6 +74,9 @@ class Vacunacion extends Entidad {
     }
 
     public function getRegistroVacunacion() {
+        if ($this->registroVacunacion == NULL) {
+            $this->registroVacunacion = new ArrayCollection();
+        }
         return $this->registroVacunacion;
     }
 
