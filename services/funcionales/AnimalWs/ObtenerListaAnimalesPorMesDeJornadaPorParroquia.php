@@ -103,6 +103,7 @@ $fecha1 = date_create($dia)->format('Y-m-d');
 //                                                 registrovacunacion_has_animal.Animal_id = animal.id
 //                                                 WHERE vacunacion.id = :id', $rsm);
 //    $query->setParameter("id", $id);
+
 $db = PDOManager::db;
 $host = PDOManager::host;
 $user = PDOManager::user;
@@ -129,7 +130,8 @@ $st = $pdo->prepare("Select registrovacunacion_has_animal.cantidad, animal.nombr
         . "ON registrovacunacion.id = registrovacunacion_has_animal.Registrovacunacion_id "
         . "INNER JOIN animal "
         . "ON registrovacunacion_has_animal.Animal_id = animal.id "
-        . "WHERE parroquia.nombre = :nombreParroquia AND vacunacion.fechaElaboracion = :fecha");
+        . "WHERE parroquia.nombre = :nombreParroquia AND vacunacion.fechaElaboracion "
+        . "BETWEEN :fecha AND LAST_DAY( :fecha )");
 $st->bindParam(':nombreParroquia', $nombreParroquia);
 $st->bindParam(':fecha', $fecha1);
 

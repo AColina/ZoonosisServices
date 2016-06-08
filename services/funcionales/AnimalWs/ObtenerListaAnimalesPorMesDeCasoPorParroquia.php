@@ -103,6 +103,7 @@ $fecha1 = date_create($dia)->format('Y-m-d');
 //                                                 registrovacunacion_has_animal.Animal_id = animal.id
 //                                                 WHERE vacunacion.id = :id', $rsm);
 //    $query->setParameter("id", $id);
+
 $db = PDOManager::db;
 $host = PDOManager::host;
 $user = PDOManager::user;
@@ -119,21 +120,21 @@ $pdo = new PDO($con, $user, PDOManager::pass);
 //                                                 INNER JOIN animal ON
 //                                                 registrovacunacion_has_animal.Animal_id = animal.id
 //                                                 WHERE vacunacion.id = "+$id;
-$st = $pdo->prepare("Select registrovacunacion_has_animal.cantidad, animal.nombre "
+$st = $pdo->prepare("Select animal_has_caso.cantidadIngresado, animal.nombre "
         . "FROM parroquia "
-        . "INNER JOIN vacunacion "
-        . "ON parroquia.id = vacunacion.Parroquia_id "
-        . "INNER JOIN registrovacunacion "
-        . "ON vacunacion.id = registrovacunacion.Vacunacion_id "
-        . "INNER JOIN registrovacunacion_has_animal "
-        . "ON registrovacunacion.id = registrovacunacion_has_animal.Registrovacunacion_id "
+        . "INNER JOIN caso "
+        . "ON parroquia.id = caso.Parroquia_id "
+        . "INNER JOIN animal_has_caso "
+        . "ON caso.id = animal_has_caso.Caso_id "
         . "INNER JOIN animal "
-        . "ON registrovacunacion_has_animal.Animal_id = animal.id "
-        . "WHERE parroquia.nombre = :nombreParroquia AND vacunacion.fechaElaboracion = :fecha");
+        . "ON animal_has_caso.Animal_id = animal.id "
+        . "WHERE parroquia.nombre = :nombreParroquia AND caso.fechaElaboracion "
+        . "BETWEEN :fecha AND LAST_DAY( :fecha )");
 $st->bindParam(':nombreParroquia', $nombreParroquia);
 $st->bindParam(':fecha', $fecha1);
-
+//    echo $nombreMunicipio;
 //    echo $fecha1;
+//    echo $st->queryString;
 $resultado = $st->execute();
 
 echo json_encode($st->fetchAll());

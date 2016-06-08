@@ -108,7 +108,12 @@ $fecha1 = date_create($dia)->format('Y-m-d');
 //                                                 WHERE vacunacion.id = :id', $rsm);
 //    $query->setParameter("id", $id);
 
-    $pdo = new PDO("mysql:dbname=zoonosissystem;host=localhost", "root", "");
+$db = PDOManager::db;
+$host = PDOManager::host;
+$user = PDOManager::user;
+$pass = PDOManager::pass;
+$con = 'mysql:dbname=' .$db. ';host=' . $host;
+$pdo = new PDO($con, $user, PDOManager::pass);
 
 
 

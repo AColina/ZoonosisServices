@@ -167,7 +167,7 @@ class PDOManager {
     const host = "localhost";
     const user = "root";
     const pass = "";
-    const db = "zoonosissystem";
+    const db = "zoonosis";
     const driver = "pdo_mysql";
 
     //datos de doctrine

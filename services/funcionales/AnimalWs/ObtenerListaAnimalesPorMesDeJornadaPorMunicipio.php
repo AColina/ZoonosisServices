@@ -32,7 +32,6 @@ if ($dia == NULL) {
 //$idMunicipio = $json[0]['id'];
 //$entityManager = PDOManager::inicializarEntityManager();
 //$qbb = $entityManager->createQueryBuilder();
-
 //$qb = new QueryBuilder('SELECT a FROM Parroquia a JOIN Municipio m');
 //$r = $qb->agregarCondicion("m.nombre", "=", $nombreMunicipio, false, true)
 //        ->ejecutarQuery(0);
@@ -43,7 +42,6 @@ if ($dia == NULL) {
 //$json = json_decode($json, true);
 //
 //$listaIdVacunaciones;
-
 //foreach ($json as $item['vacunaciones'] => $key) {
 ////$json = json_encode($item['vacunaciones'],true);
 //    // echo var_dump($key['vacunaciones']);
@@ -76,19 +74,17 @@ if ($dia == NULL) {
 $fecha1 = date_create($dia)->format('Y-m-d');
 
 //foreach ($listaIdVacunaciones as $id) {
-
-    //  $qb = new QueryBuilder('SELECT r FROM Vacunacion a JOIN RegistroVacunacion r');
-    // $r = $qb->agregarCondicion("a.id","=",$id,false,true)
-    //    ->ejecutarQuery(0);
+//  $qb = new QueryBuilder('SELECT r FROM Vacunacion a JOIN RegistroVacunacion r');
+// $r = $qb->agregarCondicion("a.id","=",$id,false,true)
+//    ->ejecutarQuery(0);
 //    $query = $entityManager->createQuery(
-    //       'SELECT r
-    //       FROM Vacunacion a
-    //      JOIN a.registroVacunacion r
-    //     JOIN r.registroVacunacion_has_Animal rv
-    //    WHERE a.id = :id'
-    // )->setParameter('id',$id);
-    // $r = $query->getResult();
-
+//       'SELECT r
+//       FROM Vacunacion a
+//      JOIN a.registroVacunacion r
+//     JOIN r.registroVacunacion_has_Animal rv
+//    WHERE a.id = :id'
+// )->setParameter('id',$id);
+// $r = $query->getResult();
 //    $rsm = new ResultSetMapping();
 //    $rsm->addEntityResult('registrovacunacion_has_animal', 're');
 //    $rsm->addEntityResult('animal', 'a');
@@ -96,7 +92,7 @@ $fecha1 = date_create($dia)->format('Y-m-d');
 //    $rsm->addMetaResult('re', 'animal_id', 'animal_id');
 //    $rsm->addFieldResult('a', 'nombre', 'nombre');
 //    $rsm->addMetaResult('a', 'id', 'id');
-    //  $rsm->addFieldResult('re', 'animal', 'animal');
+//  $rsm->addFieldResult('re', 'animal', 'animal');
 // build rsm here
 //
 //    $query = $entityManager->createNativeQuery('SELECT cantidad,nombre FROM vacunacion  INNER JOIN
@@ -108,7 +104,12 @@ $fecha1 = date_create($dia)->format('Y-m-d');
 //                                                 WHERE vacunacion.id = :id', $rsm);
 //    $query->setParameter("id", $id);
 
-    $pdo = new PDO("mysql:dbname=zoonosissystem;host=localhost", "root", "");
+$db = PDOManager::db;
+$host = PDOManager::host;
+$user = PDOManager::user;
+$pass = PDOManager::pass;
+$con = 'mysql:dbname=' .$db. ';host=' . $host;
+$pdo = new PDO($con, $user, PDOManager::pass);
 
 
 
@@ -119,27 +120,27 @@ $fecha1 = date_create($dia)->format('Y-m-d');
 //                                                 INNER JOIN animal ON
 //                                                 registrovacunacion_has_animal.Animal_id = animal.id
 //                                                 WHERE vacunacion.id = "+$id;
-  $st =  $pdo->prepare("Select registrovacunacion_has_animal.cantidad, animal.nombre "
-            . "FROM municipio "
-            . "INNER JOIN parroquia "
-            . "ON municipio.id = parroquia.Municipio_id "
-            . "INNER JOIN vacunacion "
-            . "ON parroquia.id = vacunacion.Parroquia_id "
-            . "INNER JOIN registrovacunacion "
-            . "ON vacunacion.id = registrovacunacion.Vacunacion_id "
-            . "INNER JOIN registrovacunacion_has_animal "
-            . "ON registrovacunacion.id = registrovacunacion_has_animal.Registrovacunacion_id "
-            . "INNER JOIN animal "
-            . "ON registrovacunacion_has_animal.Animal_id = animal.id " 
-            . "WHERE municipio.nombre = :nombreMunicipio AND vacunacion.fechaElaboracion "
-            . "BETWEEN :fecha AND LAST_DAY( :fecha )");
-    $st->bindParam(':nombreMunicipio', $nombreMunicipio);
-    $st->bindParam(':fecha', $fecha1);
-  //  echo $fecha1;
-    $resultado = $st->execute();
-  //  echo $st->queryString;
- echo   json_encode($st->fetchAll());
-    
+$st = $pdo->prepare("Select registrovacunacion_has_animal.cantidad, animal.nombre "
+        . "FROM municipio "
+        . "INNER JOIN parroquia "
+        . "ON municipio.id = parroquia.Municipio_id "
+        . "INNER JOIN vacunacion "
+        . "ON parroquia.id = vacunacion.Parroquia_id "
+        . "INNER JOIN registrovacunacion "
+        . "ON vacunacion.id = registrovacunacion.Vacunacion_id "
+        . "INNER JOIN registrovacunacion_has_animal "
+        . "ON registrovacunacion.id = registrovacunacion_has_animal.Registrovacunacion_id "
+        . "INNER JOIN animal "
+        . "ON registrovacunacion_has_animal.Animal_id = animal.id "
+        . "WHERE municipio.nombre = :nombreMunicipio AND vacunacion.fechaElaboracion "
+        . "BETWEEN :fecha AND LAST_DAY( :fecha )");
+$st->bindParam(':nombreMunicipio', $nombreMunicipio);
+$st->bindParam(':fecha', $fecha1);
+//  echo $fecha1;
+$resultado = $st->execute();
+//  echo $st->queryString;
+echo json_encode($st->fetchAll());
+
 //    $query =  "Select registrovacunacion_has_animal.cantidad, animal.nombre "
 //            . "FROM municipio "
 //            . "INNER JOIN parroquia "
