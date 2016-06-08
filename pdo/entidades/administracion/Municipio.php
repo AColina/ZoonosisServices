@@ -17,12 +17,19 @@
  */
 require_once ('/../EntidadAdministrativa.php');
 
+use Doctrine\ORM\Mapping\Entity,
+    Doctrine\ORM\Mapping\OneToMany,
+    JMS\Serializer\Annotation\Type,
+    Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * @Entity 
  */
 class Municipio extends EntidadAdministrativa {
 
-    /** @OneToMany(targetEntity="Parroquia", mappedBy="municipio") */
+    /**
+     * @Type("ArrayCollection")
+     * @OneToMany(targetEntity="Parroquia", mappedBy="municipio",fetch="EAGER") */
     public $parroquias;
 
     public function __construct() {

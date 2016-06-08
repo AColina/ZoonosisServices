@@ -31,8 +31,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Caso extends Entidad {
 
     /**
-     * @var DateTime 
-     * @Type("DateTime('dd-MM-yyyy')")
+     * @Type("DateTime('d-m-Y')")
      * @Column(type="date") 
      */
     public $fechaElaboracion;
@@ -40,7 +39,7 @@ class Caso extends Entidad {
     /**
      * @var Parroquia 
      * @Type("Parroquia")
-     * @ManyToOne(targetEntity="Parroquia")
+     * @ManyToOne(targetEntity="Parroquia",fetch="EAGER")
      * @JoinColumn(name="parroquia_id")
      */
     public $parroquia;
@@ -48,7 +47,7 @@ class Caso extends Entidad {
     /**
      * @var Semana 
      * @Type("Semana")
-     * @ManyToOne(targetEntity="Semana")
+     * @ManyToOne(targetEntity="Semana",fetch="EAGER")
      * @JoinColumn(name="semana_id")
      */
     public $semana;
@@ -56,7 +55,7 @@ class Caso extends Entidad {
     /**
      * @var ArrayCollection 
      * @Type("ArrayCollection<Animal_has_Caso>")
-     * @OneToMany(targetEntity="Animal_has_Caso", mappedBy="caso", cascade={"persist", "remove"}, orphanRemoval=TRUE) 
+     * @OneToMany(targetEntity="Animal_has_Caso", mappedBy="caso", cascade={"persist", "remove"}, orphanRemoval=TRUE, fetch="EAGER")
      */
     public $animal_has_Caso;
 
@@ -65,10 +64,7 @@ class Caso extends Entidad {
     }
 
     //GETTER AND SETTER
-    /**
-     * 
-     * @return DateTime
-     */
+
     public function getFechaElaboracion() {
         return $this->fechaElaboracion;
     }
@@ -100,7 +96,7 @@ class Caso extends Entidad {
         return $this->animal_has_Caso;
     }
 
-    public function setFechaElaboracion(DateTime $fechaElaboracion) {
+    public function setFechaElaboracion($fechaElaboracion) {
         $this->fechaElaboracion = $fechaElaboracion;
     }
 

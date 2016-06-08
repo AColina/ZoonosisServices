@@ -17,8 +17,9 @@
  */
 
 
-require '../../../pdo/QueryBuilder.php';
-require_once '../../../pojos/busquedaspojo.php';
+require_once '/../../../pdo/QueryBuilder.php';
+require_once '../../../pojos/busquedasnovedadespojo.php';
+require_once '/../../../pdo/Des.php';
 
 $nombre = isset($_GET['nombre']) ? "LOWER('%" . $_GET['nombre'] . "%')" : NULL;
 $desde = isset($_GET['desde']) ? $_GET['desde'] : NULL;
@@ -37,5 +38,6 @@ $cantidadResultados = $qb->agregarCondicion("LOWER(n.nombre)", "LIKE", $nombre, 
         agregarCondicion("n.fechaElaboracion", ">", $desde, true, true)->
         agregarCondicion("n.fechaElaboracion", "<", $hasta, true, true)->
         ejecutarQuery();
-$pojo = new BusquedasPojo($cantidadResultados, $resultado);
-echo json_encode($pojo);
+$pojo = new BusquedasNovedadesPojo($cantidadResultados, $resultado);
+
+Des::toJson(BusquedasNovedadesPojo::class, $pojo);
