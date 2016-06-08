@@ -35,6 +35,7 @@ require_once '/../Doctrine/DBAL/SQLParserUtils.php';
 require_once '/../Doctrine/DBAL/Connection.php';
 require_once '/../Doctrine/DBAL/Driver.php';
 require_once '/../Doctrine/DBAL/Exception/DriverException.php';
+require_once '/../Doctrine/DBAL/Exception/ConnectionException.php';
 require_once '/../Doctrine/DBAL/Exception/ServerException.php';
 require_once '/../Doctrine/DBAL/Exception/InvalidFieldNameException.php';
 require_once '/../Doctrine/DBAL/VersionAwarePlatformDriver.php';
@@ -166,7 +167,7 @@ class PDOManager {
     const host = "localhost";
     const user = "root";
     const pass = "";
-    const db = "zoonosis";
+    const db = "zoonosissystem";
     const driver = "pdo_mysql";
 
     //datos de doctrine
