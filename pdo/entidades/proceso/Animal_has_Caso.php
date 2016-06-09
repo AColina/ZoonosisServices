@@ -43,7 +43,7 @@ class Animal_has_Caso {
     /**
      * @Type("Animal")
      * @Id
-     * @ManyToOne(targetEntity="Animal", inversedBy="animal_has_Caso")
+     * @ManyToOne(targetEntity="Animal", inversedBy="animal_has_Caso", fetch="EAGER")
      * @JoinColumn(name="animal_id", referencedColumnName="id")
      */
     public $animal;
@@ -51,7 +51,7 @@ class Animal_has_Caso {
     /**
      * @Type("Caso")
      * @Id
-     * @ManyToOne(targetEntity="Caso", inversedBy="animal_has_Caso")
+     * @ManyToOne(targetEntity="Caso", inversedBy="animal_has_Caso", fetch="EAGER")
      * @JoinColumn(name="caso_id", referencedColumnName="id")
      */
     public $caso;

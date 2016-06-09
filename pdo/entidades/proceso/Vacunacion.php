@@ -32,7 +32,7 @@ class Vacunacion extends Entidad {
 
     /**
      * @var DateTime 
-     * @Type("DateTime('dd-MM-yyyy')")
+     * @Type("DateTime('d-m-Y')")
      * @Column(type="date") */
     public $fechaElaboracion;
 

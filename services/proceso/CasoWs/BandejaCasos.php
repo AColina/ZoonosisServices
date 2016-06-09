@@ -17,8 +17,9 @@
  */
 
 
-require '../../../pdo/QueryBuilder.php';
-require_once '../../../pojos/busquedaspojo.php';
+require_once '/../../../pdo/QueryBuilder.php';
+require_once '/../../../pojos/busquedascasopojo.php';
+require_once '/../../../pdo/Des.php';
 
 $semana = isset($_GET['idSemana']) ? $_GET['idSemana'] : NULL;
 $municipio = isset($_GET['idMunicipio']) ? $_GET['idMunicipio'] : NULL;
@@ -48,5 +49,6 @@ $cantidadResultados = $qb->agregarCondicion("s.id", "=", $semana, true, true)->
         agregarCondicion("fechaElaboracion", "<", $hasta, true, true)->
         ejecutarQuery();
 
-$pojo = new BusquedasPojo($cantidadResultados, $resultado);
-echo json_encode($pojo);
+$pojo = new BusquedasCasoPojo($cantidadResultados, $resultado);
+
+ echo Des::toJson(BusquedasCasoPojo::class, $pojo);

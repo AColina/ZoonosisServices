@@ -25,7 +25,9 @@ if ($user == null) {
     die("Pass is required");
 }
 
-require '/../../../pdo/QueryBuilder.php';
+require_once '/../../../pdo/QueryBuilder.php';
+require_once '/../../../pdo/ServicesImport.php';
+require_once '/../../../pdo/Des.php';
 
 $qb = new QueryBuilder("SELECT u FROM Usuario u");
 $us = $qb->agregarCondicion("u.nombre", "=", $user)->ejecutarQuery();
@@ -36,4 +38,4 @@ if ($us == null || $us->getContrasena() != $pass) {
     $us->setContrasena("Usuario o contraseña invalido");
 }
 
-echo H57\Util\Serializor::json_encode($us);
+echo Des::toJson(Usuario::class, $us);

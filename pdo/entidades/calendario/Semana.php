@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include_once ('/../Entidad.php');
+include_once ('/../EntidadAdministrativa.php');
 
 use Doctrine\ORM\Mapping\Entity,
     Doctrine\ORM\Mapping\OneToMany,
@@ -26,12 +26,7 @@ use Doctrine\ORM\Mapping\Entity,
 /**
  * @Entity
  */
-class Semana extends Entidad {
-
-    /**
-     * @Type("string")
-     * @Column(type="string") */
-    public $semana;
+class Semana extends EntidadAdministrativa {
 
     /**
      * @Type("integer")
@@ -53,9 +48,7 @@ class Semana extends Entidad {
     }
 
     //GETTER AND SETTER
-    public function getSemana() {
-        return $this->semana;
-    }
+
 
     public function getYear() {
         return $this->year;
@@ -67,10 +60,6 @@ class Semana extends Entidad {
 
     public function getCasos() {
         return $this->casos;
-    }
-
-    public function setSemana($semana) {
-        $this->semana = $semana;
     }
 
     public function setYear($year) {

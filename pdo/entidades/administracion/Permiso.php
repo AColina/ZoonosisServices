@@ -17,12 +17,20 @@
  */
 require_once ('/../EntidadAdministrativa.php');
 
+use Doctrine\ORM\Mapping\Entity,
+    Doctrine\ORM\Mapping\OneToMany,
+    Doctrine\Common\Collections\ArrayCollection,
+    JMS\Serializer\Annotation\Type;
+
 /**
  * @Entity 
  */
 class Permiso extends EntidadAdministrativa {
 
-    /** @OneToMany(targetEntity="Usuario", mappedBy="permiso") */
+    /**
+     * @var ArrayCollection 
+     * @Type("ArrayCollection")
+     * @OneToMany(targetEntity="Usuario", mappedBy="permiso") */
     public $usuarios;
 
     public function __construct() {
@@ -36,6 +44,10 @@ class Permiso extends EntidadAdministrativa {
 
     public function setUsuarios($usuarios) {
         $this->usuarios = $usuarios;
+    }
+
+    public function __toString() {
+        return $this->nombre;
     }
 
 }

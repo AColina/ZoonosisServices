@@ -6,14 +6,25 @@
  * and open the template in the editor.
  */
 
+use JMS\Serializer\Annotation\Type;
+
 /**
  * Description of BusquedasNovedadesPojo
  *
  * @author angel.colina
  */
-class BusquedasPojo {
+class BusquedasNovedadesPojo {
 
+    /**
+     *
+     * @Type("integer")
+     */
     public $cantidad;
+
+    /**
+     *
+     * @Type("Novedades")
+     */
     public $resultados;
 
     function __construct($cantidad = 0, $resultados = NULL) {

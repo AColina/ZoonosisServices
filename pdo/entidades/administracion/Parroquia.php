@@ -33,7 +33,7 @@ class Parroquia extends EntidadAdministrativa {
     /**
      * @var Municipio 
      * @Type("Municipio")
-     * @ManyToOne(targetEntity="Municipio")
+     * @ManyToOne(targetEntity="Municipio",fetch="EAGER")
      * @JoinColumn(name="municipio_id", nullable=false)
      */
     public $municipio;
