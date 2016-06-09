@@ -18,6 +18,7 @@
 
 
 require_once '/../../../pdo/ServicesImport.php';
+require_once '/../../../pdo/Des.php';
 
 $json = file_get_contents('php://input');
 
@@ -32,7 +33,7 @@ $parroquia = $em->find(Parroquia::class, $vacunacion->getParroquia()->getId());
 $semana = $em->find(Semana::class, $vacunacion->getSemana()->getId());
 
 $registrovacunacions = $vacunacion->getRegistroVacunacion();
-echo 'cant  regs : '.  count($registrovacunacions)."<br>";
+echo 'cant  regs : ' . count($registrovacunacions) . "<br>";
 if ($vacunacion->getId() == NULL) {
     $vacunacion = new \Vacunacion();
     $vacunacion->setParroquia($parroquia);
@@ -44,7 +45,7 @@ if ($vacunacion->getId() == NULL) {
 $vacunacion = $em->find(Vacunacion::class, $vacunacion->getId());
 
 foreach ($registrovacunacions as $registrovacunacion) {
-    echo "reges : ".count($registrovacunacion->getRegistroVacunacion_has_Animal())."<br>";
+    echo "reges : " . count($registrovacunacion->getRegistroVacunacion_has_Animal()) . "<br>";
     if ($registrovacunacion->getId() == NULL) {
         $reg = new \RegistroVacunacion();
         $u = $em->find(Usuario::class, $registrovacunacion->getUsuario()->getId());
@@ -63,7 +64,7 @@ foreach ($registrovacunacions as $registrovacunacion) {
 $em->flush();
 $em->commit();
 $em->close();
-echo H57\Util\Serializor::json_encode($vacunacion);
+echo Des::toJson(Vacunacion::class, $vacunacion);
 
 function relacionar(Doctrine\ORM\EntityManager $em, RegistroVacunacion $oldRegistro, RegistroVacunacion $newRegistro) {
 
