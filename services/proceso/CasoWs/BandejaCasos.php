@@ -33,8 +33,8 @@ $qb = new QueryBuilder("SELECT c FROM Caso c "
         . "JOIN c.parroquia p JOIN p.municipio m "
         . "JOIN c.semana s ");
 $resultado = $qb->agregarCondicion("s.id", "=", $semana, true, true)->
-        agregarCondicion("m.id", ">", $municipio, true, true)->
-        agregarCondicion("p.id", ">", $parroquia, true, true)->
+        agregarCondicion("m.id", "=", $municipio, true, true)->
+        agregarCondicion("p.id", "=", $parroquia, true, true)->
         agregarCondicion("c.fechaElaboracion", ">", $desde, true, true)->
         agregarCondicion("c.fechaElaboracion", "<", $hasta, true, true)->
         ejecutarQuery($cantidad, $inicio);
@@ -43,8 +43,8 @@ $qb->agregarQuery("SELECT count(c) FROM Caso c "
         . "JOIN c.parroquia p JOIN p.municipio m "
         . "JOIN c.semana s ");
 $cantidadResultados = $qb->agregarCondicion("s.id", "=", $semana, true, true)->
-        agregarCondicion("m.id", ">", $municipio, true, true)->
-        agregarCondicion("p.id", ">", $parroquia, true, true)->
+        agregarCondicion("m.id", "=", $municipio, true, true)->
+        agregarCondicion("p.id", "=", $parroquia, true, true)->
         agregarCondicion("fechaElaboracion", ">", $desde, true, true)->
         agregarCondicion("fechaElaboracion", "<", $hasta, true, true)->
         ejecutarQuery();

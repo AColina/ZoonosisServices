@@ -16,7 +16,8 @@
  * limitations under the License.
  */
 
-require '../../../pdo/QueryBuilder.php';
+require_once '../../../pdo/QueryBuilder.php';
+require_once '/../../../pdo/Des.php';
 
 $cedula = isset($_GET['cedula']) ? $_GET['cedula'] : NULL;
 if ($cedula == NULL) {
@@ -26,4 +27,4 @@ $qb = new QueryBuilder("SELECT p FROM Persona p");
 $r = $qb->agregarCondicion("p.cedula", "=", $cedula, false, true)
         ->ejecutarQuery();
 
-echo H57\Util\Serializor::json_encode($r);
+echo Des::toJson(Persona::class,$r);
