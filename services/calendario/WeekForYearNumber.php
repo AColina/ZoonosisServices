@@ -16,7 +16,9 @@
  * limitations under the License.
  */
 
-require '/../../pdo/QueryBuilder.php';
+require_once '/../../pdo/QueryBuilder.php';
+require_once '/../../pdo/ServicesImport.php';
+require_once '/../../pdo/Des.php';
 
 $year = isset($_GET['year']) ? $_GET['year'] : NULL;
 $number = isset($_GET['number']) ? "% " . $_GET['number'] : NULL;
@@ -27,10 +29,10 @@ if ($year == null) {
     die("number is required");
 }
 
-$qb = new QueryBuilder("SELECT s FROM Semana s", "ORDER By s.semana");
+$qb = new QueryBuilder("SELECT s FROM Semana s", "ORDER By s.nombre");
 $r = $qb->agregarCondicion("s.year", "=", $year)
-        ->agregarCondicion("s.semana", "Like", $number)
+        ->agregarCondicion("s.nombre", "Like", $number)
         ->ejecutarQuery();
 
 
-echo H57\Util\Serializor::json_encode($r);
+echo Des::toJson(Semana::class, $r);

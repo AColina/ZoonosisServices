@@ -49,4 +49,4 @@ $cantidadResultados = $qb->agregarCondicion("s.id", "=", $semana, true, true)->
 
 $pojo = new BusquedasJornadasPojo($cantidadResultados, $resultado);
 
- Des::toJson(BusquedasJornadasPojo::class, $pojo);
+ echo Des::toJson(BusquedasJornadasPojo::class, $pojo);

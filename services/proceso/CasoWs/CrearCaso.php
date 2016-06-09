@@ -18,6 +18,7 @@
 
 
 require_once '/../../../pdo/ServicesImport.php';
+require_once '/../../../pdo/Des.php';
 
 $json = file_get_contents('php://input');
 
@@ -59,5 +60,4 @@ foreach ($animal_has_casos as $animal_has_caso) {
 $em->flush();
 $em->commit();
 $em->close();
-echo H57\Util\Serializor::json_encode($caso);
-//var_dump($caso);
+echo Des::toJson(Caso::class, $caso);

@@ -40,4 +40,4 @@ $cantidadResultados = $qb->agregarCondicion("LOWER(n.nombre)", "LIKE", $nombre, 
         ejecutarQuery();
 $pojo = new BusquedasNovedadesPojo($cantidadResultados, $resultado);
 
-Des::toJson(BusquedasNovedadesPojo::class, $pojo);
+echo Des::toJson(BusquedasNovedadesPojo::class, $pojo);

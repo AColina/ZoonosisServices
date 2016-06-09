@@ -17,8 +17,9 @@
  */
 
 
-require '/../../pdo/QueryBuilder.php';
-
+require_once '/../../pdo/QueryBuilder.php';
+require_once '/../../pdo/ServicesImport.php';
+require_once '/../../pdo/Des.php';
 $year = isset($_GET['year']) ? $_GET['year'] : NULL;
 
 if ($year == null) {
@@ -30,4 +31,4 @@ $r = $qb->agregarCondicion("s.year", "=", $year)
         ->ejecutarQuery(-1);
 
 
-echo H57\Util\Serializor::json_encode($r);
+echo Des::toJson(Semana::class, $r);

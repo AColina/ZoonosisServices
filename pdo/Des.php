@@ -32,10 +32,17 @@ class Des {
         $annotationReader = new AnnotationReader();
         $serializer = JMS\Serializer\SerializerBuilder::create()->build();
         $class = new \ReflectionClass($className);
-        $result = Des::map($class->getName(), $annotationReader, $serializer, $object, is_array($object) ? "[%s" : "{%s" );
-        $result.=is_array($object) ? "]" : "}";
-
-        echo $result;
+        if (is_array($object) || ($object instanceof Collection)) {
+            $json = "[%s";
+            foreach ($object as $arrayObject) {
+                $subJson = Des::map($class->getName(), $annotationReader, $serializer, $arrayObject, "{%s");
+                $json = sprintf($json, $subJson . "},%s");
+            }
+            $result = sprintf(str_replace(",%s", "%s", $json), "]");
+        } else {
+            $result = Des::map($class->getName(), $annotationReader, $serializer, $object, "{%s");
+            $result.= "}";
+        }
         return $result;
     }
 
@@ -54,10 +61,10 @@ class Des {
                     try {
                         $relationObject = $serializer->deserialize($value, $propertyAnnotations->name, 'json');
                     } catch (\Exception $ex) {
-                        $relationObject = Des::privateMap($propertyAnnotations->name, $value);
+                        $relationObject = Des::privateMap($propertyAnnotations->name, $value, $annotationReader, 2);
                     }
-                    $json = sprintf($json, "\"$propertyAnnotations->name\": $relationObject ,%s");
-                } elseif (($value instanceof Collection) || is_array($value)) {
+                    $json = sprintf($json, "\"$propName\": $relationObject ,%s");
+                } else if (is_array($value) ||($value instanceof Collection)) {
                     $reflectionProperty = new ReflectionProperty($class->getName(), $propName);
                     $propertyAnnotations = $annotationReader->getPropertyAnnotation($reflectionProperty, 'Doctrine\ORM\Mapping\OneToMany');
                     $relationClass = "";
@@ -79,7 +86,7 @@ class Des {
                 } else {
 
                     if ($value instanceof DateTime) {
-                        $value = "\"" . date_format($value, 'd-m-Y') . "\"";
+                        $value = "\"" . date_format($value, 'd/m/Y') . "\"";
                     } else if (is_numeric($value)) {
                         $value = "$value";
                     } else {
@@ -97,7 +104,7 @@ class Des {
         return substr($json, 0, strlen($json) - 3);
     }
 
-    private static function privateMap($claseName, $object) {
+    private static function privateMap($claseName, $object, $annotationReader, $depht = 1, $acual = 1) {
 
         $class = new \ReflectionClass($claseName);
         $publicProps = $class->getProperties(ReflectionProperty::IS_PUBLIC);
@@ -105,11 +112,19 @@ class Des {
         foreach ($publicProps as $prop) {
             $propName = $prop->name;
             $value = isset($object->$propName) ? $object->$propName : NULL;
-            if (!(isset($value)) || $value == NULL || is_object($value) && ($value instanceof Entidad) || ($value instanceof Collection) || is_array($value)) {
-                $value = "null";
+            if (!(isset($value)) || $value == NULL || is_object($value) &&
+                    ($value instanceof Entidad) || ($value instanceof Collection) || is_array($value)) {
+
+                if ($acual < $depht && is_object($value) && ($value instanceof Entidad)) {
+                    $reflectionProperty = new ReflectionProperty($class->getName(), $propName);
+                    $propertyAnnotations = $annotationReader->getPropertyAnnotation($reflectionProperty, 'JMS\Serializer\Annotation\Type');
+                    $value = Des::privateMap($propertyAnnotations->name, $value, $annotationReader, $acual++, $depht);
+                } else {
+                    $value = "null";
+                }
             } else {
                 if ($value instanceof DateTime) {
-                    $value = "\"" . date_format($value, 'd-m-Y') . "\"";
+                    $value = "\"" . date_format($value, 'd/m/Y') . "\"";
                 } else if (is_numeric($value)) {
                     $value = "$value";
                 } else {
@@ -118,7 +133,7 @@ class Des {
             }
             $json .=" \" $propName \" : $value ,";
         }
-      
+
         return substr($json, 0, strlen($json) - 1) . "}";
     }
 

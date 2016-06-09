@@ -39,14 +39,14 @@ class Usuario extends EntidadAdministrativa {
 
     /**
      * @var DateTime 
-     * @Type("DateTime('dd-MM-yyyy')")
+     * @Type("DateTime('d-m-Y')")
      * @Column(type="date") */
     public $fechaNacimiento;
 
     /**
      * @var Persona 
      * @Type("Persona")
-     * @OneToOne(targetEntity="Persona", inversedBy="usuario")
+     * @OneToOne(targetEntity="Persona", inversedBy="usuario",fetch="EAGER")
      * @JoinColumn(name="persona_id", referencedColumnName="id")
      */
     public $persona;
@@ -60,7 +60,7 @@ class Usuario extends EntidadAdministrativa {
     /**
      * @var Permiso 
      * @Type("Permiso")
-     * @ManyToOne(targetEntity="Permiso", inversedBy="usuarios")
+     * @ManyToOne(targetEntity="Permiso", inversedBy="usuarios",fetch="EAGER")
      * @JoinColumn(name="permiso_id", referencedColumnName="id")
      */
     public $permiso;
