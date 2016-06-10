@@ -35,8 +35,8 @@ $qb = new QueryBuilder("SELECT c FROM Caso c "
 $resultado = $qb->agregarCondicion("s.id", "=", $semana, true, true)->
         agregarCondicion("m.id", "=", $municipio, true, true)->
         agregarCondicion("p.id", "=", $parroquia, true, true)->
-        agregarCondicion("c.fechaElaboracion", ">", $desde, true, true)->
-        agregarCondicion("c.fechaElaboracion", "<", $hasta, true, true)->
+        agregarCondicion("c.fechaElaboracion", ">=", $desde, true, true)->
+        agregarCondicion("c.fechaElaboracion", "<=", $hasta, true, true)->
         ejecutarQuery($cantidad, $inicio);
 
 $qb->agregarQuery("SELECT count(c) FROM Caso c "
@@ -45,10 +45,10 @@ $qb->agregarQuery("SELECT count(c) FROM Caso c "
 $cantidadResultados = $qb->agregarCondicion("s.id", "=", $semana, true, true)->
         agregarCondicion("m.id", "=", $municipio, true, true)->
         agregarCondicion("p.id", "=", $parroquia, true, true)->
-        agregarCondicion("fechaElaboracion", ">", $desde, true, true)->
-        agregarCondicion("fechaElaboracion", "<", $hasta, true, true)->
+        agregarCondicion("c.fechaElaboracion", ">=", $desde, true, true)->
+        agregarCondicion("c.fechaElaboracion", "<=", $hasta, true, true)->
         ejecutarQuery();
 
 $pojo = new BusquedasCasoPojo($cantidadResultados, $resultado);
 
- echo Des::toJson(BusquedasCasoPojo::class, $pojo);
+echo Des::toJson(BusquedasCasoPojo::class, $pojo);

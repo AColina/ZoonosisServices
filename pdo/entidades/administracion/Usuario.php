@@ -54,7 +54,7 @@ class Usuario extends EntidadAdministrativa {
     /**
      * @var ArrayCollection 
      * @Type("ArrayCollection<Novedades>")
-     *  @OneToMany(targetEntity="Novedades", mappedBy="usuario") */
+     *  @OneToMany(targetEntity="Novedades", mappedBy="usuario", cascade={"all"}) */
     public $novedades;
 
     /**
@@ -91,6 +91,9 @@ class Usuario extends EntidadAdministrativa {
     }
 
     public function getNovedades() {
+        if ($this->novedades == NULL) {
+            $this->novedades = new ArrayCollection();
+        }
         return $this->novedades;
     }
 

@@ -34,8 +34,8 @@ $qb = new QueryBuilder("SELECT v FROM Vacunacion v JOIN v.parroquia p "
 $resultado = $qb->agregarCondicion("s.id", "=", $semana, true, true)->
         agregarCondicion("m.id", "=", $municipio, true, true)->
         agregarCondicion("p.id", "=", $parroquia, true, true)->
-        agregarCondicion("v.fechaElaboracion", ">", $desde, true, true)->
-        agregarCondicion("v.fechaElaboracion", "<", $hasta, true, true)->
+        agregarCondicion("v.fechaElaboracion", ">=", $desde, true, true)->
+        agregarCondicion("v.fechaElaboracion", "<=", $hasta, true, true)->
         ejecutarQuery($cantidad, $inicio);
 
 $qb->agregarQuery("SELECT count(v) FROM Vacunacion v JOIN v.parroquia p "
@@ -43,10 +43,10 @@ $qb->agregarQuery("SELECT count(v) FROM Vacunacion v JOIN v.parroquia p "
 $cantidadResultados = $qb->agregarCondicion("s.id", "=", $semana, true, true)->
         agregarCondicion("m.id", "=", $municipio, true, true)->
         agregarCondicion("p.id", "=", $parroquia, true, true)->
-        agregarCondicion("v.fechaElaboracion", ">", $desde, true, true)->
-        agregarCondicion("v.fechaElaboracion", "<", $hasta, true, true)->
+        agregarCondicion("v.fechaElaboracion", ">=", $desde, true, true)->
+        agregarCondicion("v.fechaElaboracion", "<=", $hasta, true, true)->
         ejecutarQuery();
 
 $pojo = new BusquedasJornadasPojo($cantidadResultados, $resultado);
 
- echo Des::toJson(BusquedasJornadasPojo::class, $pojo);
+echo Des::toJson(BusquedasJornadasPojo::class, $pojo);

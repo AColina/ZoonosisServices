@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+date_default_timezone_set("America/Caracas");
 
 require_once '/../../../pdo/ServicesImport.php';
 require_once '/../../../pdo/Des.php';

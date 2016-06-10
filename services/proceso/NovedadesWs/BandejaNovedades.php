@@ -29,14 +29,14 @@ $cantidad = isset($_GET['cantidad']) ? $_GET['cantidad'] : 10;
 
 $qb = new QueryBuilder("SELECT n FROM Novedades n");
 $resultado = $qb->agregarCondicion("LOWER(n.nombre)", "LIKE", $nombre, true, true)->
-        agregarCondicion("n.fechaElaboracion", ">", $desde, true, true)->
-        agregarCondicion("n.fechaElaboracion", "<", $hasta, true, true)->
+        agregarCondicion("n.fechaElaboracion", ">=", $desde, true, true)->
+        agregarCondicion("n.fechaElaboracion", "<=", $hasta, true, true)->
         ejecutarQuery($cantidad, $inicio);
 
 $qb->agregarQuery("SELECT count(n) FROM Novedades n");
 $cantidadResultados = $qb->agregarCondicion("LOWER(n.nombre)", "LIKE", $nombre, true, true)->
-        agregarCondicion("n.fechaElaboracion", ">", $desde, true, true)->
-        agregarCondicion("n.fechaElaboracion", "<", $hasta, true, true)->
+        agregarCondicion("n.fechaElaboracion", ">=", $desde, true, true)->
+        agregarCondicion("n.fechaElaboracion", "<=", $hasta, true, true)->
         ejecutarQuery();
 $pojo = new BusquedasNovedadesPojo($cantidadResultados, $resultado);
 
