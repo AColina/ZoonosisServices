@@ -35,6 +35,9 @@ require_once '/../Doctrine/DBAL/SQLParserUtils.php';
 require_once '/../Doctrine/DBAL/Connection.php';
 require_once '/../Doctrine/DBAL/Driver.php';
 require_once '/../Doctrine/DBAL/Exception/DriverException.php';
+require_once '/../Doctrine/DBAL/Exception/ServerException.php';
+require_once '/../Doctrine/DBAL/Exception/ConstraintViolationException.php';
+require_once '/../Doctrine/DBAL/Exception/UniqueConstraintViolationException.php';
 require_once '/../Doctrine/DBAL/Exception/ConnectionException.php';
 require_once '/../Doctrine/DBAL/Exception/ServerException.php';
 require_once '/../Doctrine/DBAL/Exception/InvalidFieldNameException.php';
@@ -164,6 +167,7 @@ use \Doctrine\ORM\EntityManager;
 class PDOManager {
 
     //Datos de base de datos
+        //104.196.31.199
     const host = "localhost";
     const user = "root";
     const pass = "";
