@@ -16,7 +16,9 @@
  * limitations under the License.
  */
 
-require_once '/../../../pdo/ServicesImport.php';
+date_default_timezone_set("America/Caracas");
+
+require_once '/../../../pdo/Des.php';
 
 $json = file_get_contents('php://input');
 
@@ -32,21 +34,55 @@ $cliente = null;
 
 if ($novedad->getCliente()->getId() != NULL) {
     $cliente = $em->find(Cliente::class, $novedad->getCliente()->getId());
-} else if ($novedad->getCliente()->getPersona()->getId() != NULL) {
-    $cliente = $novedad->getCliente();
-    $cliente->setPersona($em->find(Persona::class, $novedad->getCliente()->getPersona()->getId()));
+} else if ($novedad->getCliente()->getPersona()->getId() != NULL && $novedad->getCliente()->getId() == NULL) {
+    $temp = $novedad->getCliente();
+    $temp->setPersona($em->find(Persona::class, $novedad->getCliente()->getPersona()->getId()));
+    $cliente = crearCliente($temp, $em);
 } else {
-    $cliente = $novedad->getCliente();
+    $temp = $novedad->getCliente();
+    $persona = new \Persona();
+    $persona->setNombre($temp->getPersona()->nombre);
+    $persona->setApellido($temp->getPersona()->apellido);
+    $persona->setCedula($temp->getPersona()->cedula);
+    $temp->setPersona($persona);
+    $cliente = crearCliente($temp, $em);
 }
+$em->flush();
+
 if ($novedad->getId() == NULL) {
-    $novedad = new \Novedades();
-    $novedad->setParroquia($parroquia);
-    $novedad->setSemana($semana);
-    $novedad->setFechaElaboracion(new DateTime());
-    $em->persist($novedad);
+    $nov = new \Novedades();
+    $nov->setFechaElaboracion(new DateTime());
+    $nov->setCliente($cliente);
+    $nov->setDescripcion($novedad->getDescripcion());
+    $nov->setUsuario($usuario);
+    $nov->setNombre($novedad->getNombre());
+
+    $usuario->getNovedades()->add($nov);
+    $cliente->getNovedades()->add($nov);
     $em->flush();
+    $novedad = $nov;
 }
+
 $em->flush();
 $em->commit();
 $em->close();
-echo H57\Util\Serializor::json_encode($novedad);
+echo Des::toJson(Novedades::class, $novedad);
+
+function crearCliente($cliente, \Doctrine\ORM\EntityManager $em) {
+    if ($cliente->getId() == null) {
+        $cl = new \Cliente();
+        $persona = $cliente->getPersona();
+        $parroquia = $em->find(Parroquia::class, $cliente->getPersona()->getId());
+
+        $cl->setPersona($persona);
+        $cl->setCorreo($cliente->getCorreo());
+        $cl->setDireccion($cliente->getDireccion());
+        $cl->setTelefono($cliente->getTelefono());
+        $cl->setParroquia($parroquia);
+
+        $parroquia->getClientes()->add($cl);
+        $persona->setCliente($cl);
+        $em->flush();
+        return $cl;
+    }
+}

@@ -29,6 +29,9 @@ use Doctrine\Common\Collections\Collection,
 class Des {
 
     static function toJson($className, $object) {
+        if (!isset($object)) {
+            return "{}";
+        }
         $annotationReader = new AnnotationReader();
         $serializer = JMS\Serializer\SerializerBuilder::create()->build();
         $class = new \ReflectionClass($className);
@@ -64,7 +67,7 @@ class Des {
                         $relationObject = Des::privateMap($propertyAnnotations->name, $value, $annotationReader, 2);
                     }
                     $json = sprintf($json, "\"$propName\": $relationObject ,%s");
-                } else if (is_array($value) ||($value instanceof Collection)) {
+                } else if (is_array($value) || ($value instanceof Collection)) {
                     $reflectionProperty = new ReflectionProperty($class->getName(), $propName);
                     $propertyAnnotations = $annotationReader->getPropertyAnnotation($reflectionProperty, 'Doctrine\ORM\Mapping\OneToMany');
                     $relationClass = "";

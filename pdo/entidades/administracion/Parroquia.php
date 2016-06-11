@@ -18,12 +18,12 @@
 require_once ('/../EntidadAdministrativa.php');
 
 use Doctrine\ORM\Mapping\Entity,
- Doctrine\ORM\Mapping\ManyToOne,
- Doctrine\ORM\Mapping\JoinColumn,
- Doctrine\ORM\Mapping\OneToMany,
- JMS\Serializer\Annotation\Type,
- Doctrine\Common\Collections\Collection,
- Doctrine\Common\Collections\ArrayCollection;
+    Doctrine\ORM\Mapping\ManyToOne,
+    Doctrine\ORM\Mapping\JoinColumn,
+    Doctrine\ORM\Mapping\OneToMany,
+    JMS\Serializer\Annotation\Type,
+    Doctrine\Common\Collections\Collection,
+    Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity
@@ -53,7 +53,7 @@ class Parroquia extends EntidadAdministrativa {
     public $vacunaciones;
 
     /**
-     * @Type("array<Caso>")
+     * @Type("ArrayCollection<Caso>")
      * @OneToMany(targetEntity="Caso", mappedBy="parroquia", cascade={"remove"}) 
      */
     public $casos;
@@ -68,10 +68,16 @@ class Parroquia extends EntidadAdministrativa {
     }
 
     public function getClientes() {
+        if ($this->clientes == NULL) {
+            $this->clientes = new ArrayCollection();
+        }
         return $this->clientes;
     }
 
     public function getVacunaciones() {
+        if ($this->vacunaciones == NULL) {
+            $this->vacunaciones = new ArrayCollection();
+        }
         return $this->vacunaciones;
     }
 
@@ -80,7 +86,7 @@ class Parroquia extends EntidadAdministrativa {
      * @return ArrayCollection<Caso>
      */
     public function getCasos() {
-        if ($this->casos== NULL) {
+        if ($this->casos == NULL) {
             $this->casos = new ArrayCollection();
         }
         return $this->casos;

@@ -39,12 +39,12 @@ class Persona extends EntidadAdministrativa {
 
     /**
      * @Type("Cliente")
-     * @OneToOne(targetEntity="Cliente", mappedBy="persona") */
+     * @OneToOne(targetEntity="Cliente", mappedBy="persona", cascade={"all"}) */
     public $cliente;
 
     /**
      * @Type("Usuario")
-     * @OneToOne(targetEntity="Usuario", mappedBy="persona") */
+     * @OneToOne(targetEntity="Usuario", mappedBy="persona", cascade={"all"}) */
     public $usuario;
 
     public function __construct() {

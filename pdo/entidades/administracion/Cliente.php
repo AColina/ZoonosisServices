@@ -33,17 +33,20 @@ class Cliente extends Entidad {
 
     /**
      * @Type("string")
-     * @Column(type="string") */
+     * @Column(type="string") 
+     */
     public $telefono;
 
     /**
      * @Type("string")
-     * @Column(type="string") */
+     * @Column(type="string") 
+     */
     public $correo;
 
     /**
      * @Type("string")
-     * @Column(type="string") */
+     * @Column(type="string")
+     *  */
     public $direccion;
 
     //relaciones
@@ -65,7 +68,7 @@ class Cliente extends Entidad {
 
     /**
      * @var ArrayCollection 
-     * @Type("ArrayCollection<Vacunacion>")
+     * @Type("ArrayCollection<Novedades>")
      * @OneToMany(targetEntity="Novedades", mappedBy="cliente") */
     public $novedades;
 
@@ -95,6 +98,9 @@ class Cliente extends Entidad {
     }
 
     public function getNovedades() {
+        if ($this->novedades == NULL) {
+            $this->novedades = new ArrayCollection();
+        }
         return $this->novedades;
     }
 
