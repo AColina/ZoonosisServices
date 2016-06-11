@@ -39,14 +39,14 @@ class Parroquia extends EntidadAdministrativa {
     public $municipio;
 
     /**
-     * @var Collection 
+     * @var ArrayCollection 
      * @Type("ArrayCollection<Cliente>")
-     * @OneToMany(targetEntity="Cliente", mappedBy="parroquia") 
+     * @OneToMany(targetEntity="Cliente", mappedBy="parroquia", cascade={"persist","merge"}) 
      */
     public $clientes;
 
     /**
-     * @var Collection 
+     * @var ArrayCollection 
      * @Type("ArrayCollection<Vacunacion>")
      * @OneToMany(targetEntity="Vacunacion", mappedBy="parroquia")
      *  */

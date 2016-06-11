@@ -43,7 +43,7 @@ class Novedades extends EntidadAdministrativa {
     /**
      * @var Cliente
      * @Type("Cliente")
-     * @ManyToOne(targetEntity="Cliente", inversedBy="novedades",cascade={"persist","merge"})
+     * @ManyToOne(targetEntity="Cliente", inversedBy="novedades",cascade={"persist","merge"},fetch="EAGER")
      * @JoinColumn(name="cliente_id", referencedColumnName="id")
      */
     public $cliente;
