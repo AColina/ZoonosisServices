@@ -39,6 +39,9 @@ class Permiso extends EntidadAdministrativa {
 
     //GETTER AND SETTER
     public function getUsuarios() {
+        if ($this->usuarios == NULL) {
+            $this->usuarios = new ArrayCollection();
+        }
         return $this->usuarios;
     }
 

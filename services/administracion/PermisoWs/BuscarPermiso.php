@@ -16,14 +16,10 @@
  * limitations under the License.
  */
 
+require_once '/../../../pdo/QueryBuilder.php';
+require_once '/../../../pdo/Des.php';
 
-require_once '/../../../pdo/ServicesImport.php';
-$em=  PDOManager::inicializarEntityManager();
+$qb = new QueryBuilder("SELECT p FROM Permiso p");
+$r = $qb->ejecutarQuery(-1);
 
-$json = file_get_contents('php://input');
-
-$persona=  Persona::fromJson($json);
-$em->persist($persona);
-$em->flush();
-
-echo H57\Util\Serializor::json_encode($persona);
+echo Des::toJson(Permiso::class, $r);

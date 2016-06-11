@@ -33,7 +33,7 @@ $parroquia = $em->find(Parroquia::class, $vacunacion->getParroquia()->getId());
 $semana = $em->find(Semana::class, $vacunacion->getSemana()->getId());
 
 $registrovacunacions = $vacunacion->getRegistroVacunacion();
-echo 'cant  regs : ' . count($registrovacunacions) . "<br>";
+
 if ($vacunacion->getId() == NULL) {
     $vacunacion = new \Vacunacion();
     $vacunacion->setParroquia($parroquia);
@@ -45,7 +45,7 @@ if ($vacunacion->getId() == NULL) {
 $vacunacion = $em->find(Vacunacion::class, $vacunacion->getId());
 
 foreach ($registrovacunacions as $registrovacunacion) {
-    echo "reges : " . count($registrovacunacion->getRegistroVacunacion_has_Animal()) . "<br>";
+
     if ($registrovacunacion->getId() == NULL) {
         $reg = new \RegistroVacunacion();
         $u = $em->find(Usuario::class, $registrovacunacion->getUsuario()->getId());
@@ -69,9 +69,9 @@ echo Des::toJson(Vacunacion::class, $vacunacion);
 function relacionar(Doctrine\ORM\EntityManager $em, RegistroVacunacion $oldRegistro, RegistroVacunacion $newRegistro) {
 
     $r = $oldRegistro->getRegistroVacunacion_has_Animal();
-    echo count($r);
+
     foreach ($r as $regs) {
-        echo 'call';
+
         $reg = new \RegistroVacunacion_has_Animal();
         $reg->setCantidad($regs->getCantidad());
         $animal = $em->find(Animal::class, $regs->getAnimal()->getId());

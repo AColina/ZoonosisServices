@@ -29,22 +29,26 @@ class Persona extends EntidadAdministrativa {
 
     /**
      * @Type("string")
-     * @Column(type="string") */
+     * @Column(type="string")
+     *  */
     public $apellido;
 
     /**
      * @Type("string")
-     * @Column(type="string") */
+     * @Column(type="string") 
+     */
     public $cedula;
 
     /**
      * @Type("Cliente")
-     * @OneToOne(targetEntity="Cliente", mappedBy="persona", cascade={"all"}) */
+     * @OneToOne(targetEntity="Cliente", mappedBy="persona", cascade={"all"}) 
+     */
     public $cliente;
 
     /**
      * @Type("Usuario")
-     * @OneToOne(targetEntity="Usuario", mappedBy="persona", cascade={"all"}) */
+     * @OneToOne(targetEntity="Usuario", mappedBy="persona", cascade={"all"})
+     */
     public $usuario;
 
     public function __construct() {
