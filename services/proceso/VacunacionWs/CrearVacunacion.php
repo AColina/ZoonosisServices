@@ -56,9 +56,10 @@ foreach ($registrovacunacions as $registrovacunacion) {
         $vacunacion->getRegistroVacunacion()->add($reg);
         $em->flush();
         relacionar($em, $registrovacunacion, $reg);
-        continue;
+    } else {
+        $r=$em->find(RegistroVacunacion::class, $registrovacunacion->getId());
+        relacionar($em, $registrovacunacion, $r);
     }
-    relacionar($em, $registrovacunacion, $registrovacunacion);
 }
 
 $em->flush();
@@ -68,19 +69,23 @@ echo Des::toJson(Vacunacion::class, $vacunacion);
 
 function relacionar(Doctrine\ORM\EntityManager $em, RegistroVacunacion $oldRegistro, RegistroVacunacion $newRegistro) {
 
-    $r = $oldRegistro->getRegistroVacunacion_has_Animal();
+    foreach ($oldRegistro->getRegistroVacunacion_has_Animal() as $regs) {
+        if ($regs->getId() == null) {
+            $reg = new \RegistroVacunacion_has_Animal();
+            $reg->setCantidad($regs->getCantidad());
+            $animal = $em->find(Animal::class, $regs->getAnimal()->getId());
 
-    foreach ($r as $regs) {
-
-        $reg = new \RegistroVacunacion_has_Animal();
-        $reg->setCantidad($regs->getCantidad());
-        $animal = $em->find(Animal::class, $regs->getAnimal()->getId());
-
-        $reg->setAnimal($animal);
-        $reg->setRegistroVacunacion($newRegistro);
-        $newRegistro->getRegistroVacunacion_has_Animal()->add($reg);
-        $animal->getVacunacion_has_Animal()->add($reg);
-        $em->flush();
+            $reg->setAnimal($animal);
+            $reg->setRegistroVacunacion($newRegistro);
+            $newRegistro->getRegistroVacunacion_has_Animal()->add($reg);
+            $animal->getVacunacion_has_Animal()->add($reg);
+            $em->flush();
+        } else {
+            $regs->setRegistroVacunacion($newRegistro);
+            $regs->setAnimal($em->find(Animal::class, $regs->getAnimal()->getId()));
+            $regs = $em->merge($regs);
+            $em->flush();
+        }
     }
 }
 
