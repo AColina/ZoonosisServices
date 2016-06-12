@@ -29,7 +29,8 @@ $hasta = isset($_GET['hasta']) ? $_GET['hasta'] : NULL;
 $inicio = isset($_GET['inicio']) ? $_GET['inicio'] : -1;
 $cantidad = isset($_GET['cantidad']) ? $_GET['cantidad'] : 10;
 
-$qb = new QueryBuilder("SELECT v FROM Vacunacion v JOIN v.parroquia p "
+$qb = new QueryBuilder("SELECT rva FROM RegistroVacunacion_has_Animal rva JOIN rva.registroVacunacion rv "
+        . "JOIN rv.vacunacion v JOIN v.parroquia p "
         . "JOIN p.municipio m JOIN v.semana s");
 $resultado = $qb->agregarCondicion("s.id", "=", $semana, true, true)->
         agregarCondicion("m.id", "=", $municipio, true, true)->
@@ -38,7 +39,8 @@ $resultado = $qb->agregarCondicion("s.id", "=", $semana, true, true)->
         agregarCondicion("v.fechaElaboracion", "<=", $hasta, true, true)->
         ejecutarQuery($cantidad, $inicio);
 
-$qb->agregarQuery("SELECT count(v) FROM Vacunacion v JOIN v.parroquia p "
+$qb->agregarQuery("SELECT count(rva) FROM RegistroVacunacion_has_Animal rva JOIN rva.registroVacunacion rv "
+        . "JOIN rv.vacunacion v JOIN v.parroquia p "
         . "JOIN p.municipio m JOIN v.semana s");
 $cantidadResultados = $qb->agregarCondicion("s.id", "=", $semana, true, true)->
         agregarCondicion("m.id", "=", $municipio, true, true)->
@@ -49,4 +51,4 @@ $cantidadResultados = $qb->agregarCondicion("s.id", "=", $semana, true, true)->
 
 $pojo = new BusquedasJornadasPojo($cantidadResultados, $resultado);
 
-echo Des::toJson(BusquedasJornadasPojo::class, $pojo);
+echo Des::toJson(BusquedasJornadasPojo::class, $pojo,5);

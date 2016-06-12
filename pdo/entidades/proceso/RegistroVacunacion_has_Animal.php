@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+require_once ('/../Entidad.php');
 
 use Doctrine\ORM\Mapping\Entity,
     Doctrine\ORM\Mapping\Column,
-    Doctrine\ORM\Mapping\Id,
     Doctrine\ORM\Mapping\ManyToOne,
     Doctrine\ORM\Mapping\JoinColumn,
     JMS\Serializer\Annotation\Type;
@@ -26,7 +26,7 @@ use Doctrine\ORM\Mapping\Entity,
 /**
  * @Entity
  */
-class RegistroVacunacion_has_Animal {
+class RegistroVacunacion_has_Animal extends Entidad {
 
     /**
      * @var integer 
@@ -36,16 +36,15 @@ class RegistroVacunacion_has_Animal {
 
     /**
      * @Type("RegistroVacunacion")
-     * @Id
-     * @ManyToOne(targetEntity="RegistroVacunacion", inversedBy="registroVacunacion_has_Animal")
+     * @ManyToOne(targetEntity="RegistroVacunacion", inversedBy="registroVacunacion_has_Animal", 
+     * cascade={"persist","merge"}, fetch="EAGER")
      * @JoinColumn(name="registroVacunacion_id", referencedColumnName="id")
      */
     public $registroVacunacion;
 
     /**
      * @Type("Animal")
-     * @Id
-     * @ManyToOne(targetEntity="Animal", inversedBy="vacunacion_has_Animal")
+     * @ManyToOne(targetEntity="Animal", inversedBy="vacunacion_has_Animal", fetch="EAGER")
      * @JoinColumn(name="animal_id", referencedColumnName="id")
      */
     public $animal;

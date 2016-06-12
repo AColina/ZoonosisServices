@@ -22,7 +22,6 @@ use Doctrine\ORM\Mapping\Entity,
     Doctrine\ORM\Mapping\JoinColumn,
     Doctrine\ORM\Mapping\OneToMany,
     JMS\Serializer\Annotation\Type,
-    Doctrine\Common\Collections\Collection,
     Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -33,7 +32,7 @@ class Parroquia extends EntidadAdministrativa {
     /**
      * @var Municipio 
      * @Type("Municipio")
-     * @ManyToOne(targetEntity="Municipio",fetch="EAGER")
+     * @ManyToOne(targetEntity="Municipio", inversedBy="parroquias", fetch="EAGER")
      * @JoinColumn(name="municipio_id", nullable=false)
      */
     public $municipio;

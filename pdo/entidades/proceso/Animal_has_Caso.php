@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+require_once ('/../Entidad.php');
 
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
@@ -26,7 +27,7 @@ use JMS\Serializer\Annotation\Type;
 /**
  * @Entity
  */
-class Animal_has_Caso {
+class Animal_has_Caso extends Entidad {
 
     /**
      * @Type("integer")
@@ -42,7 +43,6 @@ class Animal_has_Caso {
 
     /**
      * @Type("Animal")
-     * @Id
      * @ManyToOne(targetEntity="Animal", inversedBy="animal_has_Caso", fetch="EAGER")
      * @JoinColumn(name="animal_id", referencedColumnName="id")
      */
@@ -50,7 +50,6 @@ class Animal_has_Caso {
 
     /**
      * @Type("Caso")
-     * @Id
      * @ManyToOne(targetEntity="Caso", inversedBy="animal_has_Caso", fetch="EAGER")
      * @JoinColumn(name="caso_id", referencedColumnName="id")
      */

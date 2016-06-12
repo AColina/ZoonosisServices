@@ -34,7 +34,6 @@ if ($usuario->getPersona()->getId() != NULL) {
     $usuario->setPersona($persona);
     $usuario = crearUsuario($usuario, $em);
 } else {
-
     $persona = new \Persona();
     $persona->setNombre($usuario->getPersona()->nombre);
     $persona->setApellido($usuario->getPersona()->apellido);
@@ -49,7 +48,8 @@ echo Des::toJson(Usuario::class, $usuario);
 
 function crearUsuario(Usuario $usuario, \Doctrine\ORM\EntityManager $em) {
 
-    $us = new \Usuario();
+    $us = $usuario->getId() == NULL ? new \Usuario() : $em->find(Usuario::class, $usuario->getId());
+
     $persona = $usuario->getPersona();
     $permiso = $em->find(Permiso::class, $usuario->getPermiso()->getId());
 
@@ -63,9 +63,12 @@ function crearUsuario(Usuario $usuario, \Doctrine\ORM\EntityManager $em) {
 
     $permiso->getUsuarios()->add($us);
     $us->setPermiso($permiso);
-    
+
     if ($persona->getId() == NULL) {
         $em->persist($persona);
+        $em->flush();
+    } else if ($us->getId() != null) {
+        $us = $em->merge($us);
         $em->flush();
     }
 

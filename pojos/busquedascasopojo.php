@@ -23,7 +23,7 @@ class BusquedasCasoPojo {
 
     /**
      *
-     * @Type("Caso")
+     * @Type("Animal_has_Caso")
      */
     public $resultados;
 

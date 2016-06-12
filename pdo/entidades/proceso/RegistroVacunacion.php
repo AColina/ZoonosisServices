@@ -32,21 +32,23 @@ class RegistroVacunacion extends Entidad {
 
     /**
      * @Type("Vacunacion")
-     * @ManyToOne(targetEntity="Vacunacion", inversedBy="registroVacunacion")
+     * @ManyToOne(targetEntity="Vacunacion", inversedBy="registroVacunacion", fetch="EAGER")
      * @JoinColumn(name="vacunacion_id", referencedColumnName="id")
      */
     public $vacunacion;
 
     /**
      * @Type("Usuario")
-     * @ManyToOne(targetEntity="Usuario", inversedBy="registroVacunacion")
+     * @ManyToOne(targetEntity="Usuario", inversedBy="registroVacunacion", fetch="EAGER")
      * @JoinColumn(name="usuario_id", referencedColumnName="id")
      */
     public $usuario;
 
     /**
      * @Type("ArrayCollection<RegistroVacunacion_has_Animal>")
-     * @OneToMany(targetEntity="RegistroVacunacion_has_Animal", mappedBy="registroVacunacion",cascade={"all"}) */
+     * @OneToMany(targetEntity="RegistroVacunacion_has_Animal",
+     *  mappedBy="registroVacunacion",cascade={"all"}, fetch="EAGER")
+     */
     public $registroVacunacion_has_Animal;
 
     public function __construct() {

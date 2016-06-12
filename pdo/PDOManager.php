@@ -112,6 +112,7 @@ require_once '/../Doctrine/DBAL/Events.php';
 require_once '/../Doctrine/DBAL/Types/Type.php';
 require_once '/../Doctrine/DBAL/Types/StringType.php';
 require_once '/../Doctrine/DBAL/Types/TextType.php';
+require_once '/../Doctrine/DBAL/Types/DateTimeType.php';
 require_once '/../Doctrine/DBAL/Types/DateType.php';
 require_once '/../Doctrine/DBAL/Types/IntegerType.php';
 require_once '/../Doctrine/DBAL/Exception/DriverException.php';
@@ -151,6 +152,8 @@ require_once '/../Doctrine/ORM/Internal/CommitOrderCalculator.php';
 require_once '/../Doctrine/ORM/Id/SequenceGenerator.php';
 require_once '/../Doctrine/DBAL/Statement.php';
 require_once '/../Doctrine/DBAL/Exception/ConstraintViolationException.php';
+require_once '/../Doctrine/DBAL/Exception/UniqueConstraintViolationException.php';
+require_once '/../Doctrine/DBAL/Exception/ForeignKeyConstraintViolationException.php';
 require_once '/../Doctrine/DBAL/Exception/NotNullConstraintViolationException.php';
 require_once '/Serializor.php';
 

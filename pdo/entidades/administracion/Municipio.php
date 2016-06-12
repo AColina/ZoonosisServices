@@ -29,7 +29,8 @@ class Municipio extends EntidadAdministrativa {
 
     /**
      * @Type("ArrayCollection")
-     * @OneToMany(targetEntity="Parroquia", mappedBy="municipio",fetch="EAGER") */
+     * @OneToMany(targetEntity="Parroquia", mappedBy="municipio",fetch="EAGER") 
+     */
     public $parroquias;
 
     public function __construct() {

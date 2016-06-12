@@ -25,10 +25,13 @@ if ($dia == NULL) {
     die('Es obligatorio seleccionar una parroquia');
 }
 
-require '../../../pdo/QueryBuilder.php';
+require_once '../../../pdo/QueryBuilder.php';
+require_once '/../../../pdo/Des.php';
 
-$qb = new QueryBuilder("SELECT c FROM Caso c JOIN c.parroquia p");
-$resultado = $qb->agregarCondicion("c.fechaElaboracion", "=", $dia)->
+$fecha = date_create($dia)->format('Y-m-d');
+
+$qb = new QueryBuilder("SELECT v FROM Vacunacion v JOIN v.parroquia p");
+$resultado = $qb->agregarCondicion("v.fechaElaboracion", "=", new DateTime($fecha))->
         agregarCondicion("p.id", "=", $parroquia)->
         ejecutarQuery();
-echo json_encode($resultado);
+echo Des::toJson(Vacunacion::class, $resultado, 5);

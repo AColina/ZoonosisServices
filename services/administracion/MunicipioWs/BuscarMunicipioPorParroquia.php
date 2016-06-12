@@ -16,9 +16,16 @@
  * limitations under the License.
  */
 
-require_once '../../../pdo/QueryBuilder.php';
+$parroquia = isset($_GET['idParroquia']) ? $_GET['idParroquia'] : NULL;
+
+if ($parroquia == NULL) {
+    die("idParroquia is requiered");
+}
+require_once '/../../../pdo/QueryBuilder.php';
 require_once '/../../../pdo/Des.php';
 
-$qb = new QueryBuilder("SELECT a FROM Animal a ORDER BY a.nombre");
-$r = $qb->ejecutarQuery(-1);
-echo Des::toJson(Animal::class, $r);
+$qb = new QueryBuilder("SELECT m FROM Municipio m JOIN m.parroquias p");
+$r = $qb->agregarCondicion("p.id", "=", $parroquia)
+        ->ejecutarQuery();
+
+echo Des::toJson(Municipio::class, $r);

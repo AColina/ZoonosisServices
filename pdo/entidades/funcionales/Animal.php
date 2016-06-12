@@ -33,7 +33,7 @@ class Animal extends EntidadAdministrativa {
     /**
      * @var Especie 
      * @Type("Especie")
-     * @ManyToOne(targetEntity="Especie", inversedBy="animales")
+     * @ManyToOne(targetEntity="Especie", inversedBy="animales", fetch="EAGER")
      * @JoinColumn(name="especie_id", referencedColumnName="id")
      */
     public $especie;
@@ -42,13 +42,14 @@ class Animal extends EntidadAdministrativa {
      * @var ArrayCollection 
      * @Type("ArrayCollection<RegistroVacunacion_has_Animal>")
      * @OneToMany(targetEntity="RegistroVacunacion_has_Animal", mappedBy="animal",
-     * cascade={"persist", "remove"}, orphanRemoval=TRUE) */
+     * cascade={"all"}) */
     public $vacunacion_has_Animal;
 
     /**
      * @var ArrayCollection 
      * @Type("ArrayCollection<Animal_has_Caso>")
-     * @OneToMany(targetEntity="Animal_has_Caso", mappedBy="animal",cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     * @OneToMany(targetEntity="Animal_has_Caso", mappedBy="animal",
+     * cascade={"all"})
      *  */
     public $animal_has_Caso;
 

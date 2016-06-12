@@ -134,7 +134,7 @@ class Des {
                     $value = "\"$value\"";
                 }
             }
-            $json .=" \" $propName \" : $value ,";
+            $json .=" \"$propName\" : $value ,";
         }
 
         return substr($json, 0, strlen($json) - 1) . "}";

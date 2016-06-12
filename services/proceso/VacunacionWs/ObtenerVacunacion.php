@@ -16,9 +16,14 @@
  * limitations under the License.
  */
 
-require_once '../../../pdo/QueryBuilder.php';
+
 require_once '/../../../pdo/Des.php';
 
-$qb = new QueryBuilder("SELECT a FROM Animal a ORDER BY a.nombre");
-$r = $qb->ejecutarQuery(-1);
-echo Des::toJson(Animal::class, $r);
+$idVacunacion = isset($_GET['idVacunacion']) ? $_GET['idVacunacion'] : NULL;
+
+if ($idVacunacion == NULL) {
+    die("vacunacion is required");
+}
+$pdo = new PDOManager();
+
+echo Des::toJson(Vacunacion::class, $pdo->obtenerEntidad(Vacunacion::class, $idVacunacion));
