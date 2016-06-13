@@ -41,20 +41,28 @@ if ($caso->getId() == NULL) {
     $caso->setFechaElaboracion(new DateTime());
     $em->persist($caso);
     $em->flush();
+}else{
+    echo 'no crea';
 }
 $caso = $em->find(Caso::class, $caso->getId());
 
 foreach ($animal_has_casos as $animal_has_caso) {
-    $tem = new Animal_has_Caso();
-    $animal = $em->find(Animal::class, $animal_has_caso->getAnimal()->getId());
+    if ($animal_has_caso->getId() == NULL) {
+        $tem = new Animal_has_Caso();
+        $animal = $em->find(Animal::class, $animal_has_caso->getAnimal()->getId());
 
-    $tem->setCantidadIngresado($animal_has_caso->getCantidadIngresado());
-    $tem->setCantidadPositivos($animal_has_caso->getCantidadPositivos());
-    $tem->setAnimal($animal);
-    $tem->setCaso($caso);
+        $tem->setCantidadIngresado($animal_has_caso->getCantidadIngresado());
+        $tem->setCantidadPositivos($animal_has_caso->getCantidadPositivos());
+        $tem->setAnimal($animal);
+        $tem->setCaso($caso);
 
-    $animal->getAnimal_has_Caso()->add($tem);
-    $caso->getAnimal_has_Caso()->add($tem);
+        $animal->getAnimal_has_Caso()->add($tem);
+        $caso->getAnimal_has_Caso()->add($tem);
+    } else {
+        $animal_has_caso->setCaso($caso);
+        $animal_has_caso = $em->merge($animal_has_caso);
+        $em->flush();
+    }
 }
 
 $em->flush();

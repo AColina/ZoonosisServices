@@ -61,7 +61,7 @@ class Cliente extends Entidad {
 
     /**
      * @Type("Persona")
-     * @OneToOne(targetEntity="Persona", inversedBy="cliente")
+     * @OneToOne(targetEntity="Persona", inversedBy="cliente", fetch="EAGER", cascade={"persist","merge"})
      * @JoinColumn(name="persona_id", referencedColumnName="id")
      */
     public $persona;

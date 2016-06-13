@@ -26,9 +26,13 @@ if ($dia == NULL) {
 }
 
 require '../../../pdo/QueryBuilder.php';
+require_once '/../../../pdo/Des.php';
+
+$fecha = date_create($dia)->format('Y-m-d');
 
 $qb = new QueryBuilder("SELECT c FROM Caso c JOIN c.parroquia p");
-$resultado = $qb->agregarCondicion("c.fechaElaboracion", "=", $dia)->
+$resultado = $qb->agregarCondicion("c.fechaElaboracion", "=", new DateTime($fecha))->
         agregarCondicion("p.id", "=", $parroquia)->
         ejecutarQuery();
-echo json_encode($resultado);
+
+echo Des::toJson(Caso::class, $resultado,3);

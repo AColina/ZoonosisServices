@@ -39,7 +39,7 @@ class Caso extends Entidad {
     /**
      * @var Parroquia 
      * @Type("Parroquia")
-     * @ManyToOne(targetEntity="Parroquia",fetch="EAGER")
+     * @ManyToOne(targetEntity="Parroquia", inversedBy="casos", fetch="EAGER")
      * @JoinColumn(name="parroquia_id")
      */
     public $parroquia;
@@ -47,7 +47,7 @@ class Caso extends Entidad {
     /**
      * @var Semana 
      * @Type("Semana")
-     * @ManyToOne(targetEntity="Semana",fetch="EAGER")
+     * @ManyToOne(targetEntity="Semana", fetch="EAGER")
      * @JoinColumn(name="semana_id")
      */
     public $semana;
@@ -55,7 +55,7 @@ class Caso extends Entidad {
     /**
      * @var ArrayCollection 
      * @Type("ArrayCollection<Animal_has_Caso>")
-     * @OneToMany(targetEntity="Animal_has_Caso", mappedBy="caso", cascade={"persist", "remove"}, orphanRemoval=TRUE, fetch="EAGER")
+     * @OneToMany(targetEntity="Animal_has_Caso", mappedBy="caso", cascade={"all"}, fetch="EAGER")
      */
     public $animal_has_Caso;
 

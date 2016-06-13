@@ -29,7 +29,7 @@ $hasta = isset($_GET['hasta']) ? $_GET['hasta'] : NULL;
 $inicio = isset($_GET['inicio']) ? $_GET['inicio'] : -1;
 $cantidad = isset($_GET['cantidad']) ? $_GET['cantidad'] : 10;
 
-$qb = new QueryBuilder("SELECT c FROM Caso c "
+$qb = new QueryBuilder("SELECT a FROM Animal_has_Caso a JOIN a.caso c "
         . "JOIN c.parroquia p JOIN p.municipio m "
         . "JOIN c.semana s ");
 $resultado = $qb->agregarCondicion("s.id", "=", $semana, true, true)->
@@ -39,7 +39,7 @@ $resultado = $qb->agregarCondicion("s.id", "=", $semana, true, true)->
         agregarCondicion("c.fechaElaboracion", "<=", $hasta, true, true)->
         ejecutarQuery($cantidad, $inicio);
 
-$qb->agregarQuery("SELECT count(c) FROM Caso c "
+$qb->agregarQuery("SELECT COUNT(a) FROM Animal_has_Caso a JOIN a.caso c "
         . "JOIN c.parroquia p JOIN p.municipio m "
         . "JOIN c.semana s ");
 $cantidadResultados = $qb->agregarCondicion("s.id", "=", $semana, true, true)->
@@ -51,4 +51,4 @@ $cantidadResultados = $qb->agregarCondicion("s.id", "=", $semana, true, true)->
 
 $pojo = new BusquedasCasoPojo($cantidadResultados, $resultado);
 
-echo Des::toJson(BusquedasCasoPojo::class, $pojo);
+echo Des::toJson(BusquedasCasoPojo::class, $pojo, 5);

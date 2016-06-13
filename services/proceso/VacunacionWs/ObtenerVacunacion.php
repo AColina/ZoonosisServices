@@ -16,3 +16,14 @@
  * limitations under the License.
  */
 
+
+require_once '/../../../pdo/Des.php';
+
+$idVacunacion = isset($_GET['idVacunacion']) ? $_GET['idVacunacion'] : NULL;
+
+if ($idVacunacion == NULL) {
+    die("vacunacion is required");
+}
+$pdo = new PDOManager();
+
+echo Des::toJson(Vacunacion::class, $pdo->obtenerEntidad(Vacunacion::class, $idVacunacion));

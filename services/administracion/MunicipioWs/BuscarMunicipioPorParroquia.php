@@ -16,14 +16,16 @@
  * limitations under the License.
  */
 
+$parroquia = isset($_GET['idParroquia']) ? $_GET['idParroquia'] : NULL;
 
-require_once '/../../../pdo/ServicesImport.php';
-$em=  PDOManager::inicializarEntityManager();
+if ($parroquia == NULL) {
+    die("idParroquia is requiered");
+}
+require_once '/../../../pdo/QueryBuilder.php';
+require_once '/../../../pdo/Des.php';
 
-$json = file_get_contents('php://input');
+$qb = new QueryBuilder("SELECT m FROM Municipio m JOIN m.parroquias p");
+$r = $qb->agregarCondicion("p.id", "=", $parroquia)
+        ->ejecutarQuery();
 
-$persona=  Persona::fromJson($json);
-$em->persist($persona);
-$em->flush();
-
-echo H57\Util\Serializor::json_encode($persona);
+echo Des::toJson(Municipio::class, $r);

@@ -16,9 +16,10 @@
  * limitations under the License.
  */
 
-require_once '../../../pdo/QueryBuilder.php';
+require_once '/../../../pdo/QueryBuilder.php';
 require_once '/../../../pdo/Des.php';
 
-$qb = new QueryBuilder("SELECT a FROM Animal a ORDER BY a.nombre");
+$qb = new QueryBuilder("SELECT p FROM Permiso p");
 $r = $qb->ejecutarQuery(-1);
-echo Des::toJson(Animal::class, $r);
+
+echo Des::toJson(Permiso::class, $r);

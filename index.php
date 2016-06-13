@@ -1,15 +1,6 @@
 
 <?php
 
-require_once '/pdo/ServicesImport.php';
-$pdo = new PDOManager();
+$fecha = date_create("1994-12-21")->format('Y-m-d');
 
-$entity= new Persona();
-
-$entity->setNombre("Angel");
-$entity->setApellido("Colina");
-$entity->setCedula("45676543");
-
-$pdo->persistirEntidad($entity);
-
-        
+echo new DateTime($fecha);

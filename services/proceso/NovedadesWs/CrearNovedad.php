@@ -51,7 +51,9 @@ $em->flush();
 
 if ($novedad->getId() == NULL) {
     $nov = new \Novedades();
-    $nov->setFechaElaboracion(new DateTime());
+    $fecha = date_create($novedad->getFechaElaboracion())->format('Y-m-d');
+    $nov->setFechaElaboracion(new DateTime($fecha));
+
     $nov->setCliente($cliente);
     $nov->setDescripcion($novedad->getDescripcion());
     $nov->setUsuario($usuario);
@@ -72,8 +74,7 @@ function crearCliente($cliente, \Doctrine\ORM\EntityManager $em) {
     if ($cliente->getId() == null) {
         $cl = new \Cliente();
         $persona = $cliente->getPersona();
-        $parroquia = $em->find(Parroquia::class, $cliente->getPersona()->getId());
-
+        $parroquia = $em->find(Parroquia::class, $cliente->getParroquia()->getId());
         $cl->setPersona($persona);
         $cl->setCorreo($cliente->getCorreo());
         $cl->setDireccion($cliente->getDireccion());

@@ -23,7 +23,7 @@ class BusquedasJornadasPojo {
 
     /**
      *
-     * @Type("Vacunacion")
+     * @Type("RegistroVacunacion_has_Animal")
      */
     public $resultados;
 

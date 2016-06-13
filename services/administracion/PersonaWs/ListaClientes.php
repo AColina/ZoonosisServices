@@ -16,9 +16,10 @@
  * limitations under the License.
  */
 
-require '../../../pdo/QueryBuilder.php';
+require_once '../../../pdo/QueryBuilder.php';
+require_once '/../../../pdo/Des.php';
 
 $qb = new QueryBuilder("SELECT c FROM Cliente c JOIN c.persona p Order By p.nombre");
 $r = $qb->ejecutarQuery(-1);
 
-echo H57\Util\Serializor::json_encode($r);
+echo Des::toJson(Cliente::class, $r);

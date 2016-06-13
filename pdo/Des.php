@@ -28,7 +28,7 @@ use Doctrine\Common\Collections\Collection,
  */
 class Des {
 
-    static function toJson($className, $object) {
+    static function toJson($className, $object, $depht = 2) {
         if (!isset($object)) {
             return "{}";
         }
@@ -38,18 +38,18 @@ class Des {
         if (is_array($object) || ($object instanceof Collection)) {
             $json = "[%s";
             foreach ($object as $arrayObject) {
-                $subJson = Des::map($class->getName(), $annotationReader, $serializer, $arrayObject, "{%s");
+                $subJson = Des::map($class->getName(), $annotationReader, $serializer, $arrayObject, "{%s",$depht);
                 $json = sprintf($json, $subJson . "},%s");
             }
             $result = sprintf(str_replace(",%s", "%s", $json), "]");
         } else {
-            $result = Des::map($class->getName(), $annotationReader, $serializer, $object, "{%s");
+            $result = Des::map($class->getName(), $annotationReader, $serializer, $object, "{%s", $depht);
             $result.= "}";
         }
         return $result;
     }
 
-    private static function map($claseName, $annotationReader, Serializer $serializer, $object, $json) {
+    private static function map($claseName, $annotationReader, Serializer $serializer, $object, $json, $depht) {
         $class = new \ReflectionClass($claseName);
         $publicProps = $class->getProperties();
 
@@ -64,7 +64,7 @@ class Des {
                     try {
                         $relationObject = $serializer->deserialize($value, $propertyAnnotations->name, 'json');
                     } catch (\Exception $ex) {
-                        $relationObject = Des::privateMap($propertyAnnotations->name, $value, $annotationReader, 2);
+                        $relationObject = Des::privateMap($propertyAnnotations->name, $value, $annotationReader, $depht);
                     }
                     $json = sprintf($json, "\"$propName\": $relationObject ,%s");
                 } else if (is_array($value) || ($value instanceof Collection)) {
@@ -81,7 +81,7 @@ class Des {
                     $json = sprintf($json, "\"$propName\" : [%s");
 
                     foreach ($value as $arrayObject) {
-                        $subJson = Des::map($relationClass, $annotationReader, $serializer, $arrayObject, "{%s");
+                        $subJson = Des::map($relationClass, $annotationReader, $serializer, $arrayObject, "{%s",$depht);
                         $json = sprintf($json, $subJson . "},%s");
                     }
                     $json = str_replace(",%s", "%s", $json);
@@ -107,8 +107,8 @@ class Des {
         return substr($json, 0, strlen($json) - 3);
     }
 
-    private static function privateMap($claseName, $object, $annotationReader, $depht = 1, $acual = 1) {
-
+    private static function privateMap($claseName, $object, $annotationReader, $depht, $acual = 1) {
+       
         $class = new \ReflectionClass($claseName);
         $publicProps = $class->getProperties(ReflectionProperty::IS_PUBLIC);
         $json = "{";
@@ -134,7 +134,7 @@ class Des {
                     $value = "\"$value\"";
                 }
             }
-            $json .=" \" $propName \" : $value ,";
+            $json .=" \"$propName\" : $value ,";
         }
 
         return substr($json, 0, strlen($json) - 1) . "}";
