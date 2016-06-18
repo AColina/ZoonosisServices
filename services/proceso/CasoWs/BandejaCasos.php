@@ -26,7 +26,7 @@ $municipio = isset($_GET['idMunicipio']) ? $_GET['idMunicipio'] : NULL;
 $parroquia = isset($_GET['idParroquia']) ? $_GET['idParroquia'] : NULL;
 $desde = isset($_GET['desde']) ? $_GET['desde'] : NULL;
 $hasta = isset($_GET['hasta']) ? $_GET['hasta'] : NULL;
-$inicio = isset($_GET['inicio']) ? $_GET['inicio'] : -1;
+$inicio = isset($_GET['inicial']) ? $_GET['inicial'] : -1;
 $cantidad = isset($_GET['cantidad']) ? $_GET['cantidad'] : 10;
 
 $qb = new QueryBuilder("SELECT a FROM Animal_has_Caso a JOIN a.caso c "

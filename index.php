@@ -1,6 +1,9 @@
 
 <?php
+require_once '/pdo/QueryBuilder.php';
 
-$fecha = date_create("1994-12-21")->format('Y-m-d');
-
-echo new DateTime($fecha);
+$qb = new QueryBuilder("SELECT p FROM Parroquia p JOIN p.municipio m");
+$r=$qb->agregarCondicion("LOWER(m.nombre)", "=", "Maracaibo")
+        ->agregarCondicion("LOWER(p.nombre)", "=", "Idelfonso Vásquez")
+        ->ejecutarQuery();
+var_dump($r);

@@ -62,6 +62,10 @@ class Parroquia extends EntidadAdministrativa {
     }
 
     //GETTER AND SETTER
+    /**
+     * 
+     * @return Municipio
+     */
     public function getMunicipio() {
         return $this->municipio;
     }

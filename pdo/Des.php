@@ -38,7 +38,7 @@ class Des {
         if (is_array($object) || ($object instanceof Collection)) {
             $json = "[%s";
             foreach ($object as $arrayObject) {
-                $subJson = Des::map($class->getName(), $annotationReader, $serializer, $arrayObject, "{%s",$depht);
+                $subJson = Des::map($class->getName(), $annotationReader, $serializer, $arrayObject, "{%s", $depht);
                 $json = sprintf($json, $subJson . "},%s");
             }
             $result = sprintf(str_replace(",%s", "%s", $json), "]");
@@ -81,14 +81,17 @@ class Des {
                     $json = sprintf($json, "\"$propName\" : [%s");
 
                     foreach ($value as $arrayObject) {
-                        $subJson = Des::map($relationClass, $annotationReader, $serializer, $arrayObject, "{%s",$depht);
+                        $subJson = Des::map($relationClass, $annotationReader, $serializer, $arrayObject, "{%s", $depht);
                         $json = sprintf($json, $subJson . "},%s");
                     }
                     $json = str_replace(",%s", "%s", $json);
                     $json = sprintf($json, "],%s");
                 } else {
 
-                    if ($value instanceof DateTime) {
+                    if ($value instanceof DateTime || (DateTime::createFromFormat('Y-m-d', $value) !== FALSE)) {
+                        if (!($value instanceof DateTime)) {
+                            $value = new DateTime($value);
+                        }
                         $value = "\"" . date_format($value, 'd/m/Y') . "\"";
                     } else if (is_numeric($value)) {
                         $value = "$value";
@@ -108,7 +111,7 @@ class Des {
     }
 
     private static function privateMap($claseName, $object, $annotationReader, $depht, $acual = 1) {
-       
+
         $class = new \ReflectionClass($claseName);
         $publicProps = $class->getProperties(ReflectionProperty::IS_PUBLIC);
         $json = "{";
@@ -126,7 +129,10 @@ class Des {
                     $value = "null";
                 }
             } else {
-                if ($value instanceof DateTime) {
+                if ($value instanceof DateTime || (DateTime::createFromFormat('Y-m-d', $value) !== FALSE)) {
+                    if (!($value instanceof DateTime)) {
+                        $value = new DateTime($value);
+                    }
                     $value = "\"" . date_format($value, 'd/m/Y') . "\"";
                 } else if (is_numeric($value)) {
                     $value = "$value";

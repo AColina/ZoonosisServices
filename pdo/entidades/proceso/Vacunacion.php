@@ -66,10 +66,18 @@ class Vacunacion extends Entidad {
         return $this->fechaElaboracion;
     }
 
+    /**
+     * 
+     * @return Semana
+     */
     public function getSemana() {
         return $this->semana;
     }
 
+    /**
+     * 
+     * @return Parroquia
+     */
     public function getParroquia() {
         return $this->parroquia;
     }

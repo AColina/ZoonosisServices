@@ -24,7 +24,7 @@ require_once '/../../../pdo/Des.php';
 $nombre = isset($_GET['nombre']) ? "LOWER('%" . $_GET['nombre'] . "%')" : NULL;
 $desde = isset($_GET['desde']) ? $_GET['desde'] : NULL;
 $hasta = isset($_GET['hasta']) ? $_GET['hasta'] : NULL;
-$inicio = isset($_GET['inicio']) ? $_GET['inicio'] : -1;
+$inicio = isset($_GET['inicial']) ? $_GET['inicial'] : -1;
 $cantidad = isset($_GET['cantidad']) ? $_GET['cantidad'] : 10;
 
 $qb = new QueryBuilder("SELECT n FROM Novedades n");

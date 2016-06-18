@@ -170,7 +170,7 @@ use \Doctrine\ORM\EntityManager;
 class PDOManager {
 
     //Datos de base de datos
-        //104.196.31.199
+    //104.196.31.199
     const host = "localhost";
     const user = "root";
     const pass = "";
@@ -186,7 +186,7 @@ class PDOManager {
     private $ultimoQuery;
 
     public function __construct() {
-        $this->entityManager = NULL;
+        $this->entityManager = $this->inicializarEntityManager();
     }
 
     public static function inicializarEntityManager() {
@@ -211,25 +211,6 @@ class PDOManager {
         return NULL;
     }
 
-    public function iniciarTransaccion() {
-        if ($this->entityManager == null) {
-            $this->entityManager = $this->inicializarEntityManager();
-            $this->entityManager->beginTransaction();
-        }
-    }
-
-    public function finalizarTransaccion($commit) {
-        if ($commit) {
-            $this->entityManager->flush();
-            $this->entityManager->commit();
-        } else {
-            $this->entityManager->rollback();
-        }
-
-        $this->entityManager->close();
-        $this->entityManager = NULL;
-    }
-
     /**
      * 
      * @param class calse
@@ -237,57 +218,7 @@ class PDOManager {
      * @return Entidad
      */
     public function obtenerEntidad($clase, $id) {
-        $entityManager = PDOManager::inicializarEntityManager();
-        $o = $entityManager->find($clase, $id);
-        $entityManager->close();
-        return $o;
-    }
-
-    /**
-     * 
-     * @param object $entidad
-     * @param boolean $usaTransaccion
-     * @return boolean
-     */
-    public function persistirEntidad(Entidad $entidad, $usaTransaccion = FALSE) {
-        if ($usaTransaccion) {
-            $this->entityManager->persist($entidad);
-            $this->entityManager->flush();
-            return true;
-        } else {
-            return $this->operacionCUD($entidad, 'INSERTAR');
-        }
-    }
-
-    /**
-     * 
-     * @param object $entidad
-     * @param boolean $usaTransaccion
-     * @return object
-     */
-    public function actualizarEntidad(Entidad $entidad, $usaTransaccion = FALSE) {
-        if ($usaTransaccion) {
-            return $this->entityManager->merge($entidad);
-        } else {
-            return $this->operacionCUD($entidad, 'ACTUALIZAR');
-        }
-    }
-
-    /**
-     * Elimina un Registro en la Base de Datos
-     *
-     * @param entidad Instancia de una Entidad de JPA
-     * @param idEntidad ID que del Registro
-     * @param usaTransaccion
-     * @return TRUE si la operación termina Exitosamente
-     */
-    public function eliminarEntidad($entidad, $usaTransaccion = FALSE) {
-        if ($usaTransaccion) {
-            $this->entityManager->remove($entidad);
-            return true;
-        } else {
-            return $this->operacionCUD($entidad, 'ELIMINAR');
-        }
+        return $this->entityManager->find($clase, $id);
     }
 
     public function ejecutarQuery($query, $parametros, $numeroResultados = 1, $posicionInicial = -1) {
@@ -296,19 +227,17 @@ class PDOManager {
 
     //METODOS PRIVADOS
     private function createQuery($query, $parametros, $esNamedQuery, $numeroResultados, $posicionInicial) {
-
-        $emLocal = PDOManager::inicializarEntityManager();
         $queryEjecutable = NULL;
         if ($esNamedQuery) {
-            $queryEjecutable = $emLocal->createNamedQuery($query);
+            $queryEjecutable = $this->entityManager->createNamedQuery($query);
         } else {
-            $queryEjecutable = $emLocal->createQuery($query);
+            $queryEjecutable = $this->entityManager->createQuery($query);
         }
 
-        return $this->ejecutarQueryGeneral($queryEjecutable, $emLocal, $parametros, $numeroResultados, $posicionInicial);
+        return $this->ejecutarQueryGeneral($queryEjecutable, $parametros, $numeroResultados, $posicionInicial);
     }
 
-    private function ejecutarQueryGeneral($query, $entityManager, $parametros, $numeroResultados, $posicionInicial) {
+    private function ejecutarQueryGeneral($query, $parametros, $numeroResultados, $posicionInicial) {
         if ($parametros != null && count($parametros) > 0) {
             foreach ($parametros as $key => $value) {
                 $query->setParameter($key, $value);
@@ -330,46 +259,17 @@ class PDOManager {
                 return $query->getSingleResult();
             } catch (Doctrine\ORM\NoResultException $ex) {
                 return null;
-            } finally {
-                $entityManager->close();
             }
-        }
-    }
-
-    private function operacionCUD($entidad, $operaciones) {
-        $pdo = new PDOManager();
-        try {
-            $pdo->iniciarTransaccion();
-            $emLocal = $pdo->getEntityManager();
-            $rt = true;
-            switch ($operaciones) {
-                case 'INSERTAR':
-                    $emLocal->persist($entidad);
-                    $emLocal->flush();
-                    break;
-                case 'ACTUALIZAR':
-                    $rt = $emLocal->merge($entidad);
-                    $emLocal->flush();
-                    break;
-                case 'ELIMINAR':
-                    $emLocal->remove($entidad);
-                    $emLocal->flush();
-                    break;
-            }
-
-            $pdo->finalizarTransaccion(true);
-            return $rt;
-        } catch (\Exception $ex) {
-            echo "ERROR AL INTENTAR HACER UNA OPERACION CUD: " . $ex->getMessage() . "<br>";
-            return false;
-        } finally {
-            $emLocal->close();
         }
     }
 
     //GETTER
     public function getUltimoQuery() {
         return $this->ultimoQuery;
+    }
+
+    public function setEntityManager(EntityManager $entityManager) {
+        $this->entityManager = $entityManager;
     }
 
     /**

@@ -63,8 +63,14 @@ abstract class Entidad {
         $objJson = json_decode($json);
         $class = new \ReflectionClass(new static());
         $em = PDOManager::inicializarEntityManager();
-        $result = Entidad::map($class->getName(), $annotationReader, $serializer, $objJson, $em);
-
+        if (is_array($objJson)) {
+            $result = array();
+            foreach ($objJson as $arrayObject) {
+                $result[] = Entidad::map($class->getName(), $annotationReader, $serializer, $arrayObject, $em);
+            }
+        } else {
+            $result = Entidad::map($class->getName(), $annotationReader, $serializer, $objJson, $em);
+        }
         return $result;
     }
 

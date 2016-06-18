@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-date_default_timezone_set("America/Caracas");
 
 require_once '/../../../pdo/ServicesImport.php';
 require_once '/../../../pdo/Des.php';
@@ -35,10 +34,11 @@ $semana = $em->find(Semana::class, $vacunacion->getSemana()->getId());
 $registrovacunacions = $vacunacion->getRegistroVacunacion();
 
 if ($vacunacion->getId() == NULL) {
+    $fecha = date_create($vacunacion->getFechaElaboracion())->format('Y-m-d');
     $vacunacion = new \Vacunacion();
     $vacunacion->setParroquia($parroquia);
     $vacunacion->setSemana($semana);
-    $vacunacion->setFechaElaboracion(new DateTime());
+    $vacunacion->setFechaElaboracion(new DateTime($fecha));
     $em->persist($vacunacion);
     $em->flush();
 }
@@ -57,7 +57,7 @@ foreach ($registrovacunacions as $registrovacunacion) {
         $em->flush();
         relacionar($em, $registrovacunacion, $reg);
     } else {
-        $r=$em->find(RegistroVacunacion::class, $registrovacunacion->getId());
+        $r = $em->find(RegistroVacunacion::class, $registrovacunacion->getId());
         relacionar($em, $registrovacunacion, $r);
     }
 }
