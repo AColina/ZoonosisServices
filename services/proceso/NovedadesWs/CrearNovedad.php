@@ -63,6 +63,11 @@ if ($novedad->getId() == NULL) {
     $cliente->getNovedades()->add($nov);
     $em->flush();
     $novedad = $nov;
+} else {
+    $nov = $em->find(Novedades::class, $novedad->getId());
+    $nov->setDescripcion($novedad->getDescripcion());
+    $nov->setNombre($novedad->getNombre());
+    $novedad = $em->merge($nov);
 }
 
 $em->flush();
