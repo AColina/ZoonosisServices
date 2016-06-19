@@ -35,10 +35,12 @@ $semana = $em->find(Semana::class, $caso->getSemana()->getId());
 $animal_has_casos = $caso->getAnimal_has_Caso();
 
 if ($caso->getId() == NULL) {
+    $fecha = date_create($caso->getFechaElaboracion())->format('Y-m-d');
     $caso = new \Caso();
     $caso->setParroquia($parroquia);
     $caso->setSemana($semana);
-    $caso->setFechaElaboracion(new DateTime());
+        
+    $caso->setFechaElaboracion(new DateTime($fecha));
     $em->persist($caso);
     $em->flush();
 }else{
