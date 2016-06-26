@@ -39,7 +39,9 @@ foreach ($vacunaciones as $vacunacion) {
             ->agregarCondicion("LOWER(p.nombre)", "=", $vacunacion->getParroquia()->getNombre())
             ->agregarCondicion("LOWER(s.nombre)", "=", ($vacunacion->getSemana()->getNombre()))
             ->agregarCondicion("s.year", "=", $vacunacion->getSemana()->getYear())
+            ->agregarCondicion("v.fechaElaboracion", "=", $vacunacion->getFechaElaboracion())
             ->ejecutarQuery();
+    
     if ($v == null) {
 
         $parroquia = $qb->agregarQuery("SELECT p FROM Parroquia p JOIN p.municipio m")
