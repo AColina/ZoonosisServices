@@ -30,15 +30,18 @@ class Especie extends EntidadAdministrativa {
     /**
      * @var ArrayCollection
      * @Type("ArrayCollection<Animal>")
-     * @OneToMany(targetEntity="Animal", mappedBy="especie") */
+     * @OneToMany(targetEntity="Animal", mappedBy="especie",cascade={"all"}) */
     public $animales;
 
-    public function __construct() {
-        
-    }
-
     //GETTER AND SETTER
+    /**
+     * 
+     * @return ArrayCollection
+     */
     public function getAnimales() {
+        if ($this->animales == NULL) {
+            $this->animales = new ArrayCollection();
+        }
         return $this->animales;
     }
 

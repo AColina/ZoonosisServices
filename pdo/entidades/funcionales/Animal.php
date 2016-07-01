@@ -53,10 +53,6 @@ class Animal extends EntidadAdministrativa {
      *  */
     public $animal_has_Caso;
 
-    public function __construct() {
-        
-    }
-
     //GETTER AND SETTER
     public function getEspecie() {
         return $this->especie;

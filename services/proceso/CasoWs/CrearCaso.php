@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-date_default_timezone_set("America/Caracas");
 
 require_once '/../../../pdo/ServicesImport.php';
 require_once '/../../../pdo/Des.php';
@@ -43,9 +42,8 @@ if ($caso->getId() == NULL) {
     $caso->setFechaElaboracion(new DateTime($fecha));
     $em->persist($caso);
     $em->flush();
-}else{
-    echo 'no crea';
 }
+
 $caso = $em->find(Caso::class, $caso->getId());
 
 foreach ($animal_has_casos as $animal_has_caso) {

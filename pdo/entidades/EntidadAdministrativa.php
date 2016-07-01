@@ -30,6 +30,10 @@ abstract class EntidadAdministrativa extends Entidad {
      * @Column(type="string") */
     public $nombre;
 
+    public function __construct($nombre = null) {
+        $this->nombre = $nombre;
+    }
+
     public function getNombre() {
         return $this->nombre;
     }
