@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 use Doctrine\ORM\Query\ResultSetMapping;
 
 require '../../../pdo/QueryBuilder.php';
@@ -23,14 +24,12 @@ $nombreParroquia = isset($_GET['nombreParroquia']) ? $_GET['nombreParroquia'] : 
 if ($nombreParroquia == NULL) {
     die('El parametro nombreParroquia es requerido');
 }
-$year = isset($_GET['year']) ? $_GET['year'] : NULL;
-if ($year == NULL) {
-    die("El parametro year es requerido");
+$dia = isset($_GET['dia']) ? $_GET['dia'] : NULL;
+if ($dia == NULL) {
+    die("El parametro dia es requerido");
 }
-$semana = isset($_GET['semana']) ? $_GET['semana'] : NULL;
-if ($semana == NULL) {
-    die("El parametro semana es requerido");
-}
+
+$fecha1 = date_create($dia)->format('Y-m-d');
 
 $db = PDOManager::db;
 $host = PDOManager::host;
@@ -43,21 +42,17 @@ $st = $pdo->prepare("Select animal_has_caso.cantidadIngresado, animal_has_caso.c
         . "FROM parroquia "
         . "INNER JOIN caso "
         . "ON parroquia.id = caso.Parroquia_id "
-        . "INNER JOIN semana "
-        . "ON caso.Semana_id = semana.id "
         . "INNER JOIN animal_has_caso "
         . "ON caso.id = animal_has_caso.Caso_id "
         . "INNER JOIN animal "
         . "ON animal_has_caso.Animal_id = animal.id "
-        . "WHERE parroquia.nombre = :nombreParroquia AND semana.nombre = :semana AND semana.year = :year");
+        . "WHERE parroquia.nombre = :nombreParroquia AND caso.fechaElaboracion "
+        . "BETWEEN :fecha AND LAST_DAY( :fecha )");
 $st->bindParam(':nombreParroquia', $nombreParroquia);
-$st->bindParam(':semana', $semana);
-$st->bindParam(":year", $year);
-//    echo $nombreMunicipio;
+$st->bindParam(':fecha', $fecha1);
+
 //    echo $fecha1;
-//    echo $st->queryString;
 $resultado = $st->execute();
 
 echo json_encode($st->fetchAll());
-
 
